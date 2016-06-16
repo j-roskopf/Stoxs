@@ -59,7 +59,7 @@ public class OwnedStocksAdapter extends RecyclerView.Adapter<OwnedStocksAdapter.
                     intent.putExtra("symbol",stocks.get(position).getSymbol());
                     intent.putExtra("amountOwned",stocks.get(position).getAmountOwned());
                     intent.putExtra("amountPurchaseAt",stocks.get(position).getPrice());
-                    Log.d("D","goingToOpenOwnedStocksDetailView  with symbol and i = " + stocks.get(position).getSymbol() + " " + position);
+                    Log.d("D","goingToOpenOwnedStocksDetailView with symbol and i = " + stocks.get(position).getSymbol() + " " + position);
                     context.startActivity(intent);
                 }
             });

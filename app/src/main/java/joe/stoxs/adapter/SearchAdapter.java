@@ -24,6 +24,7 @@ import joe.stoxs.R;
 import joe.stoxs.DetailSearchView;
 
 import static android.support.v7.widget.AppCompatDrawableManager.get;
+import static com.amulyakhare.textdrawable.TextDrawable.builder;
 import static joe.stoxs.R.id.cv;
 
 /**
@@ -50,11 +51,23 @@ public class SearchAdapter extends ArrayAdapter<Company> {
         TextView symbol = (TextView) rowView.findViewById(R.id.symbol);
         ImageView image = (ImageView) rowView.findViewById(R.id.photo);
 
+        Log.d("D","valuesName = " + values.get(i).getName());
+
         name.setText(values.get(i).getName());
         symbol.setText(values.get(i).getSymbol());
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(values.get(i).getName().substring(0,1), getMatColor("500"));
-        image.setImageDrawable(drawable);
+        TextDrawable drawable;
+
+        if(values.get(i).getName().equals("")){
+            drawable =  builder()
+                    .buildRound(values.get(i).getSymbol().substring(0,1), getMatColor("500"));
+            image.setImageDrawable(drawable);
+        }else{
+           drawable =  TextDrawable.builder()
+                    .buildRound(values.get(i).getName().substring(0,1), getMatColor("500"));
+            image.setImageDrawable(drawable);
+        }
+
+
 
         return rowView;
     }

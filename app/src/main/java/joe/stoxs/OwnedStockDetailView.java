@@ -72,6 +72,8 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
     String companyNameValue;
 
+    String amountCurrentlyOwned;
+
 
     /**
      * ui
@@ -134,6 +136,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
         String priceBoughtAt = getIntent().getExtras().getString("amountPurchaseAt");
 
         priceStockBoughtAt = priceBoughtAt;
+        amountCurrentlyOwned = amountOwned;
 
         displayInfo(amountOwned,priceBoughtAt);
 
@@ -354,7 +357,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
         double boughtAt = Double.parseDouble(priceStockBoughtAt);
         double current = Double.parseDouble(currentPrice);
-        int amount = number.intValue();
+        final int amount = number.intValue();
         double amountToSell = amount * current;
         double amountSpentWhenPurchasing = amount * boughtAt;
         double total = amountToSell - amountSpentWhenPurchasing;
@@ -389,26 +392,19 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
+
+                            Log.d("D","sellDebug with amount owned = " + amountCurrentlyOwned);
+
+                            UserOwnedStock toEdit = realm.where(UserOwnedStock.class)
+                                    .equalTo("name", companyNameValue).findFirst();
                             realm.beginTransaction();
-
-
-                            // obtain the results of a query
-                            final RealmResults<UserOwnedStock> results = realm.where(UserOwnedStock.class).equalTo("name",companyNameValue).findAll();
-
-                            Log.d("D","sellDebug with results.size = " + results.size());
-
-                            // All changes to data must happen in a transaction
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-
-                                    // Delete all matches
-                                    results.deleteAllFromRealm();
-                                }
-                            });
-
-
+                            Log.d("D","sellDebug with amount in db = " + toEdit.getAmountOwned());
+                            int amountDifferent = Integer.parseInt(toEdit.getAmountOwned()) - (amount);
+                            Log.d("D","sellDebug putting this many in the DB = " + amountDifferent);
+                            toEdit.setAmountOwned(amountDifferent+"");
                             realm.commitTransaction();
+
+
 
                             sDialog
                                     .setTitleText("Success!")
