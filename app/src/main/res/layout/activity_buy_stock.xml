@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/activity_buy_stock"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="joe.stoxs.BuyStockActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/container"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_margin="16dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/detailCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:weightSum="22"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <!-- company name and current price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/companyNameBuy"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text=""
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/companyPriceBuy"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text=""
+                        />
+
+
+                </LinearLayout>
+
+            <!-- slider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="3"
+                android:weightSum="10"
+                android:orientation="horizontal"
+                android:layout_height="0dp">
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:layout_width="0dp"
+                    android:id="@+id/seekbar"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="8"
+                    />
+
+                <Button
+                    android:id ="@+id/numberButton"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/white"
+                    android:layout_margin="8dp"
+                    android:layout_weight="2"
+                    android:background="@drawable/circular_background_blue"
+                    android:layout_height="wrap_content"
+                    android:text="#"
+                    />
+
+
+            </LinearLayout>
+
+                <!-- total number of stocks-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/totalStocksText"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Total Stocks:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/totalAmount"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="0"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- total price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/totalPriceText"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Total Price:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/totalPrice"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="$0.00"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- buy button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <Button
+                        android:id ="@+id/buyButton"
+                        android:layout_width="0dp"
+                        android:textColor="@android:color/white"
+                        android:layout_margin="8dp"
+                        android:layout_weight="10"
+                        android:background="@drawable/circular_background_green"
+                        android:layout_height="wrap_content"
+                        android:text="Buy"
+                        />
+
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </ScrollView>
+
+</RelativeLayout>

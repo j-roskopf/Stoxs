@@ -1,0 +1,78 @@
+package joe.stoxs.adapter;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+
+import java.util.ArrayList;
+
+import joe.stoxs.Object.Markit.Company;
+import joe.stoxs.R;
+import joe.stoxs.DetailSearchView;
+
+import static android.support.v7.widget.AppCompatDrawableManager.get;
+import static joe.stoxs.R.id.cv;
+
+/**
+ * Created by Joe on 6/1/2016.
+ */
+
+public class SearchAdapter extends ArrayAdapter<Company> {
+    private final Context context;
+    private final ArrayList<Company> values;
+
+    public SearchAdapter(Context context, ArrayList<Company> values) {
+        super(context, -1, values);
+        this.context = context;
+        this.values = values;
+    }
+
+    @Override
+    public View getView(int i, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.search_result_item, parent, false);
+
+        TextView name = (TextView) rowView.findViewById(R.id.name);
+        TextView symbol = (TextView) rowView.findViewById(R.id.symbol);
+        ImageView image = (ImageView) rowView.findViewById(R.id.photo);
+
+        name.setText(values.get(i).getName());
+        symbol.setText(values.get(i).getSymbol());
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRound(values.get(i).getName().substring(0,1), getMatColor("500"));
+        image.setImageDrawable(drawable);
+
+        return rowView;
+    }
+
+
+    private int getMatColor(String typeColor)
+    {
+        int returnColor = Color.BLACK;
+        int arrayId = context.getResources().getIdentifier("mdcolor_" + typeColor, "array", context.getApplicationContext().getPackageName());
+
+        if (arrayId != 0)
+        {
+            TypedArray colors = context.getResources().obtainTypedArray(arrayId);
+            int index = (int) (Math.random() * colors.length());
+            returnColor = colors.getColor(index, Color.BLACK);
+            colors.recycle();
+        }
+        return returnColor;
+    }
+
+}

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/activity_buy_stock"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="joe.stoxs.BuyStockActivity">
+
+    <com.eyalbira.loadingdots.LoadingDots
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        autofit:LoadingDots_auto_play="true"
+        autofit:LoadingDots_dots_color="@android:color/holo_blue_light"
+        autofit:LoadingDots_dots_count="6"
+        autofit:LoadingDots_dots_size="15dp"
+        autofit:LoadingDots_dots_space="1dp"
+        autofit:LoadingDots_loop_duration="800"
+        autofit:LoadingDots_loop_start_delay="100"
+        autofit:LoadingDots_jump_duration="200"
+        autofit:LoadingDots_jump_height="4dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/container"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_margin="16dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/detailCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:weightSum="22"
+                android:layout_margin="16dp"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <!-- company name and current price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/companyNameBuy"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text=""
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/companyPriceBuy"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text=""
+                        />
+
+
+                </LinearLayout>
+
+                <!-- slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="3"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                        android:layout_width="0dp"
+                        android:id="@+id/seekbar"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="8"
+                        />
+
+                    <Button
+                        android:id ="@+id/numberButton"
+                        android:layout_width="0dp"
+                        android:textColor="@android:color/white"
+                        android:layout_margin="8dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/circular_background_blue"
+                        android:layout_height="wrap_content"
+                        android:text="#"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- total number of stocks-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/amountOwnedStocksText"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Amount owned:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/amountOwnedStocksValue"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="0"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- total number of stocks-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/totalStocksText"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Amount to sell:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/totalAmount"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="0"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- bought at price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/boughtAtPriceText"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Bought at / stock:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/boughtAtPriceValue"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="$0.00"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- total price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/amountEarned"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Sell for:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/amountEarnedValue"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="$0.00"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- total price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:id="@+id/totalPriceText"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:textSize="24sp"
+                        autofit:minTextSize="16sp"
+                        android:text="Total Price:"
+                        />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="0dp"
+                        android:layout_margin="16dp"
+                        android:id="@+id/totalPrice"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:textColor="@color/moneyColor"
+                        android:maxLines="1"
+                        android:textSize="40sp"
+                        autofit:minTextSize="16sp"
+                        android:text="$0.00"
+                        />
+
+
+                </LinearLayout>
+
+                <!-- buy button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_height="0dp">
+
+                    <Button
+                        android:id ="@+id/sellButton"
+                        android:layout_width="0dp"
+                        android:textColor="@android:color/white"
+                        android:layout_margin="8dp"
+                        android:layout_weight="10"
+                        android:background="@drawable/circular_background_green"
+                        android:layout_height="wrap_content"
+                        android:text="Sell"
+                        />
+
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </ScrollView>
+
+</RelativeLayout>
