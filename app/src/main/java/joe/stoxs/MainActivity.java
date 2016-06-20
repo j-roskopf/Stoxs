@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
+    private int currentPosition;
+
     private FloatingActionButton floatingActionButton;
 
     @Override
@@ -63,12 +65,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(findViewById(R.id.main_content), "Implement refresh", Snackbar.LENGTH_LONG)
-                        .show();
+                refresh();
+
             }
         });
 
@@ -81,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -180,6 +188,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void refresh(){
+        if(mViewPager.getCurrentItem() == 0){
+            BaseStockSearch fragment = (BaseStockSearch) mSectionsPagerAdapter.getItem(0);
+            fragment.refresh();
+        }else{
+            Snackbar.make(findViewById(R.id.main_content), "Implement refresh for this fragment", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -193,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+
+            currentPosition = position;
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if(position == 0){
@@ -225,5 +246,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
     }
 }

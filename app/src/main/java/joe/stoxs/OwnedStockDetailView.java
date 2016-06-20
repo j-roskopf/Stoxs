@@ -74,6 +74,8 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
     String amountCurrentlyOwned;
 
+    int amountWillSell = 0;
+
 
     /**
      * ui
@@ -171,18 +173,89 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
         sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NumberPickerBuilder npb = new NumberPickerBuilder()
-                        .setFragmentManager(getSupportFragmentManager())
-                        .setReference(REFERENCE_SELL_AMOUNT)
-                        .setLabelText("Enter amount to sell")
-                        .setMaxNumber(BigDecimal.valueOf(Double.parseDouble(amountOwned)))
-                        .setPlusMinusVisibility(View.INVISIBLE)
-                        .setDecimalVisibility(View.INVISIBLE)
-                        .setStyleResId(R.style.BetterPickersDialogFragment_Light)
-                        .setLabelText("Stocks");
-                npb.show();
+
+                if(amountWillSell == 0){
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Please select some stocks to sell")
+                            .setConfirmText("Okay!")
+                            .show();
+                }else{
+                    double totalPriceOfStock = amountWillSell * Double.parseDouble(currentPrice);
+                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                    String formattedPrice = formatter.format(totalPriceOfStock);
+                    new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+                            .setTitleText("Confirm purchase")
+                            .setContentText("You are selling " + amountWillSell + " stocks of " + companyName.getText() + " for " + formattedPrice)
+                            .setConfirmText("Sell!")
+                            .setCancelText("Cancel!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+
+                                    final boolean soldAll = sell(amountWillSell);
+                                    String message;
+                                    if(soldAll){
+                                        message = "You have sold all your stocks for " + companyName.getText();
+                                    }else{
+                                        message = "You have sold " + amountWillSell + " of your stocks for " + companyName.getText();
+                                    }
+
+                                    sDialog
+                                            .setTitleText("Success!")
+                                            .setContentText(message)
+                                            .setConfirmText("OK")
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    if(soldAll){
+                                                        //remove entry in DB
+                                                        removeEntry();
+                                                    }else{
+
+                                                    }
+                                                    finish();
+                                                }
+                                            })
+                                            .showCancelButton(false)
+                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                }
+                            })
+                            .show();
+                }
+
+
             }
         });
+    }
+
+    public boolean sell(int amount){
+        boolean soldAll = false;
+        UserOwnedStock toEdit = realm.where(UserOwnedStock.class)
+                .equalTo("name", companyNameValue).findFirst();
+        realm.beginTransaction();
+        Log.d("D","sellDebug with amount in db = " + toEdit.getAmountOwned());
+        int amountDifferent = Integer.parseInt(toEdit.getAmountOwned()) - (amount);
+
+        if(amountDifferent == 0){
+            soldAll = true;
+        }
+
+        Log.d("D","sellDebug putting this many in the DB = " + amountDifferent);
+        toEdit.setAmountOwned(amountDifferent+"");
+        realm.commitTransaction();
+
+        return soldAll;
+    }
+
+    public void removeEntry(){
+        UserOwnedStock toEdit = realm.where(UserOwnedStock.class)
+                .equalTo("name", companyNameValue).findFirst();
+        realm.beginTransaction();
+
+        toEdit.deleteFromRealm();
+
+        realm.commitTransaction();
+
     }
 
     public void formatStrings(String priceBoughtAt) {
@@ -307,6 +380,8 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
 
+                amountWillSell = value;
+
                 double amountToSell = value * priceToUse;
 
                 double amountSpentWhenPurchasing = value * priceBoughtAt;
@@ -366,6 +441,8 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
             seekbar.setProgress(amount);
 
+            amountWillSell = amount;
+
             String totalFormatted = formatter.format((total));
 
             if(total < 0){
@@ -383,44 +460,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
             totalAmount.setText(amount+"");
             amountEarnedValue.setText(price);
         }else if (reference == REFERENCE_SELL_AMOUNT){
-            String totalFormatted = formatter.format((amountToSell));
-            new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
-                    .setTitleText("Confirm sale")
-                    .setContentText("You are selling " + amount + " stocks of " + companyName.getText() + " for " + totalFormatted)
-                    .setConfirmText("Sell!")
-                    .setCancelText("Cancel!")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-
-                            Log.d("D","sellDebug with amount owned = " + amountCurrentlyOwned);
-
-                            UserOwnedStock toEdit = realm.where(UserOwnedStock.class)
-                                    .equalTo("name", companyNameValue).findFirst();
-                            realm.beginTransaction();
-                            Log.d("D","sellDebug with amount in db = " + toEdit.getAmountOwned());
-                            int amountDifferent = Integer.parseInt(toEdit.getAmountOwned()) - (amount);
-                            Log.d("D","sellDebug putting this many in the DB = " + amountDifferent);
-                            toEdit.setAmountOwned(amountDifferent+"");
-                            realm.commitTransaction();
-
-
-
-                            sDialog
-                                    .setTitleText("Success!")
-                                    .setContentText("Your stocks have been sold!")
-                                    .setConfirmText("OK")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            finish();
-                                        }
-                                    })
-                                    .showCancelButton(false)
-                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                        }
-                    })
-                    .show();
+            //when the sell amount used to open the number picker dialog
         }
 
     }

@@ -84,6 +84,10 @@ public class BaseStockSearch extends Fragment {
         return view;
     }
 
+    public void refresh(){
+        displayStocks();
+    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -102,14 +106,7 @@ public class BaseStockSearch extends Fragment {
         recyclerView = (RecyclerView)v.findViewById(R.id.ownedStocksRecyclerView);
         realm = Realm.getDefaultInstance();
         errorMessage = (TextView)v.findViewById(R.id.errorMessage);
-/*        fab = (FloatingActionButton) v.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action test new", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
     }
 
     public void displayStocks(){
