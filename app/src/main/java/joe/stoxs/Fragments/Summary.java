@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,17 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
+import org.w3c.dom.Text;
+
+import java.text.NumberFormat;
+import java.util.Calendar;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import joe.stoxs.Object.Profile;
+import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.R;
 
 /**
@@ -21,7 +31,23 @@ import joe.stoxs.R;
 
 public class Summary extends Fragment {
 
+    /**
+     * non ui
+     */
     private static String ARG_SECTION_NUMBER = "arg_section_number";
+
+    private NumberFormat formatter;
+
+    private Realm realm;
+
+    private final double DEFAULT_STARTING_MONEY = 50000;
+
+
+    /**
+     * ui
+     */
+
+    TextView money;
 
 
     public static Summary newInstance(int sectionNumber) {
@@ -36,6 +62,9 @@ public class Summary extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.summary_fragment, container, false);
+        initVars(view);
+
+        getMoney();
 
         return view;
     }
@@ -43,7 +72,44 @@ public class Summary extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        realm.close();
+    }
 
+    /**
+     * makes a call to the DB to get the amount of money the user has
+     */
+    public void getMoney(){
+        RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
+
+        if(profiles.size() > 0){
+            Profile profile = realm.where(Profile.class).findFirst();
+            money.setText(formatter.format(profile.getMoney()));
+        }else{
+            createProfile();
+        }
+    }
+
+    /**
+     * creates a profile with the default amount of money if no profile is detected
+     */
+    public void createProfile(){
+        realm.beginTransaction();
+
+        Profile profile = realm.createObject(Profile.class); // Create a new object
+        profile.setMoney(DEFAULT_STARTING_MONEY);
+        profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+
+        money.setText(formatter.format(DEFAULT_STARTING_MONEY));
+
+        realm.commitTransaction();
+
+    }
+
+    public void initVars(View view){
+        formatter = NumberFormat.getCurrencyInstance();
+        realm = Realm.getDefaultInstance();
+
+        money = (TextView)view.findViewById(R.id.money);
     }
 
     @Override

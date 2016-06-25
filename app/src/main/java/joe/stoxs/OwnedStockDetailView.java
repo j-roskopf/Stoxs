@@ -34,6 +34,7 @@ import io.realm.RealmResults;
 import joe.stoxs.Constant.Constants;
 import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.Markit.CompanyDetail;
+import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 
 import static android.R.attr.format;
@@ -180,7 +181,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                             .setConfirmText("Okay!")
                             .show();
                 }else{
-                    double totalPriceOfStock = amountWillSell * Double.parseDouble(currentPrice);
+                    final double totalPriceOfStock = amountWillSell * Double.parseDouble(currentPrice);
                     NumberFormat formatter = NumberFormat.getCurrencyInstance();
                     String formattedPrice = formatter.format(totalPriceOfStock);
                     new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
@@ -213,6 +214,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                                                     }else{
 
                                                     }
+                                                    addMoneyToUser(totalPriceOfStock);
                                                     finish();
                                                 }
                                             })
@@ -226,6 +228,16 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
             }
         });
+    }
+
+    public void addMoneyToUser(double amountToAdd){
+            Profile profile = realm.where(Profile.class).findFirst();
+            realm.beginTransaction();
+
+            profile.setMoney(profile.getMoney() + amountToAdd);
+
+            realm.commitTransaction();
+
     }
 
     public boolean sell(int amount){

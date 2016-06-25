@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.Button;
@@ -17,12 +18,17 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
+
+import static joe.stoxs.R.id.money;
 
  public class BuyStockActivity extends AppCompatActivity implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2 {
 
@@ -56,12 +62,14 @@ import joe.stoxs.Object.UserOwnedStock;
 
      String priceOfStock;
      String totalPriceOfStock;
+     String valueOfTotalPriceOfStock;
      String totalAmountOfStock;
      NumberFormat formatter = NumberFormat.getCurrencyInstance();
      Realm realm;
      Context context;
      String companyNameValue;
      String symbolValue;
+     private final double DEFAULT_STARTING_MONEY = 50000;
 
 
     @Override
@@ -103,6 +111,7 @@ import joe.stoxs.Object.UserOwnedStock;
          context = this;
          totalPriceOfStock = "";
          totalAmountOfStock = "";
+         valueOfTotalPriceOfStock = "";
          realm = Realm.getDefaultInstance();
      }
 
@@ -111,48 +120,123 @@ import joe.stoxs.Object.UserOwnedStock;
              @Override
              public void onClick(View v) {
                  if(!totalPriceOfStock.equals("") && !totalAmountOfStock.equals("")){
-                     new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
-                             .setTitleText("Confirm purchase")
-                             .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyName.getText() + " for " + totalPriceOfStock)
-                             .setConfirmText("Buy!")
-                             .setCancelText("Cancel!")
-                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                 @Override
-                                 public void onClick(SweetAlertDialog sDialog) {
-                                     realm.beginTransaction();
+                     if(hasEnoughtMoney(valueOfTotalPriceOfStock)){
+                         new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+                                 .setTitleText("Confirm purchase")
+                                 .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyName.getText() + " for " + totalPriceOfStock)
+                                 .setConfirmText("Buy!")
+                                 .setCancelText("Cancel!")
+                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                     @Override
+                                     public void onClick(SweetAlertDialog sDialog) {
+                                         realm.beginTransaction();
 
-                                     UserOwnedStock stock = realm.createObject(UserOwnedStock.class); // Create a new object
-                                     stock.setName(companyNameValue);
-                                     stock.setSymbol(symbolValue);
-                                     stock.setPrice(priceOfStock);
-                                     stock.setAmountOwned(totalAmountOfStock);
+                                         UserOwnedStock stock = realm.createObject(UserOwnedStock.class); // Create a new object
+                                         stock.setName(companyNameValue);
+                                         stock.setSymbol(symbolValue);
+                                         stock.setPrice(priceOfStock);
+                                         stock.setAmountOwned(totalAmountOfStock);
 
-                                     realm.commitTransaction();
+                                         realm.commitTransaction();
 
-                                     sDialog
-                                             .setTitleText("Success!")
-                                             .setContentText("Your stocks have been purchase!")
-                                             .setConfirmText("OK")
-                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                 @Override
-                                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                     finish();
-                                                 }
-                                             })
-                                             .showCancelButton(false)
-                                             .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                 }
-                             })
-                             .show();
+                                         sDialog
+                                                 .setTitleText("Success!")
+                                                 .setContentText("Your stocks have been purchase!")
+                                                 .setConfirmText("OK")
+                                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                     @Override
+                                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                         finish();
+                                                     }
+                                                 })
+                                                 .showCancelButton(false)
+                                                 .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                     }
+                                 })
+                                 .show();
+                     }else{
+                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                 .setTitleText("Error")
+                                 .setContentText("It looks like you don't have enough money to make that purchase")
+                                 .setConfirmText("Okay!")
+                                 .show();
+                     }
                  }else{
                      new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                             .setTitleText("Please select some stocks")
+                             .setTitleText("Error")
+                             .setContentText("Please select some stocks")
                              .setConfirmText("Okay!")
                              .show();
                  }
 
              }
          });
+     }
+
+     public boolean  hasEnoughtMoney(String amountToPurchaseFor){
+         boolean toReturn;
+         RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
+
+         if(profiles.size() > 0){
+             Profile profile = realm.where(Profile.class).findFirst();
+             toReturn = checkIfUserHasEnough(amountToPurchaseFor,profile.getMoney());
+             if(toReturn){
+                 double amountLeft = profile.getMoney() - Double.parseDouble(amountToPurchaseFor);
+                 updateUserMoney(amountLeft);
+             }
+         }else{
+             toReturn = createProfile(amountToPurchaseFor);
+         }
+
+         return toReturn;
+     }
+
+     /**
+      * creates a profile with the default amount of money if no profile is detected
+      */
+     public boolean createProfile(String amountToPurchaseFor){
+         realm.beginTransaction();
+
+         Profile profile = realm.createObject(Profile.class); // Create a new object
+         profile.setMoney(DEFAULT_STARTING_MONEY);
+         profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+
+
+         realm.commitTransaction();
+
+         boolean hasEnough = checkIfUserHasEnough(amountToPurchaseFor,DEFAULT_STARTING_MONEY);
+         if(hasEnough){
+             double amountLeft = DEFAULT_STARTING_MONEY - Double.parseDouble(amountToPurchaseFor);
+             updateUserMoney(amountLeft);
+             return true;
+         }else{
+             return false;
+         }
+
+     }
+
+     public void updateUserMoney(double amountLeft){
+         Profile profile = realm.where(Profile.class).findFirst();
+         realm.beginTransaction();
+
+         if(profile.getMoney() >= amountLeft){
+             profile.setMoney(amountLeft);
+         }else{
+             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                     .setTitleText("Something went wrong")
+                     .setConfirmText("The developer sucks")
+                     .show();
+         }
+
+         realm.commitTransaction();
+     }
+
+     public boolean checkIfUserHasEnough(String amountToPurchase, double amountUserHas){
+         if(Double.parseDouble(amountToPurchase) <= amountUserHas){
+             return true;
+         }else{
+             return false;
+         }
      }
 
      public void setupSeekBar(String volume, final String price){
@@ -166,6 +250,7 @@ import joe.stoxs.Object.UserOwnedStock;
 
                  String price = formatter.format((value * priceToUse));
                  totalAmount.setText(value+"");
+                 valueOfTotalPriceOfStock = (value * priceToUse) + "";
                  totalPrice.setText(price);
 
 
@@ -217,6 +302,7 @@ import joe.stoxs.Object.UserOwnedStock;
 
          totalAmount.setText(number.toString());
          String price = formatter.format(number.doubleValue() * Double.parseDouble(priceOfStock));
+         valueOfTotalPriceOfStock = (number.doubleValue() * Double.parseDouble(priceOfStock)) + "";
          totalPrice.setText(price);
          seekbar.setProgress(number.intValue());
 
