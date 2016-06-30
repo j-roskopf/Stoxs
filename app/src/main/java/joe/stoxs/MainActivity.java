@@ -3,7 +3,6 @@ package joe.stoxs;
 import android.app.SearchManager;
 import android.content.Context;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -35,6 +34,8 @@ import joe.stoxs.Fragments.BaseStockSearch;
 import joe.stoxs.Fragments.Summary;
 import joe.stoxs.Fragments.Watchlist;
 
+import static joe.stoxs.R.id.sellButton;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -56,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int currentPosition;
 
-    private FloatingActionButton floatingActionButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,14 +66,6 @@ public class MainActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refresh();
-
-            }
-        });
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

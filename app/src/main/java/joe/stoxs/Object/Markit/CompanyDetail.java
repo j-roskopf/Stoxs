@@ -1,10 +1,12 @@
 package joe.stoxs.Object.Markit;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Joe on 6/4/2016.
  */
 
-public class CompanyDetail {
+public class CompanyDetail extends RealmObject {
     String name;
     String symbol;
     String lastPrice;

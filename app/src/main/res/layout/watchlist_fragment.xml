@@ -5,8 +5,17 @@
 
     <TextView
         android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:id="@+id/errorMessage"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Watchlist / favorites will go here"/>
+        android:text="You don't have any favorites"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/favoritesList"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </RelativeLayout>

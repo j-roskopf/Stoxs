@@ -1,18 +1,28 @@
 package joe.stoxs.Fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
+
+import org.w3c.dom.Text;
+
 import java.text.NumberFormat;
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import joe.stoxs.Object.Profile;
+import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.R;
 
 /**
@@ -38,6 +48,9 @@ public class Summary extends Fragment {
      */
 
     TextView money;
+
+    com.github.clans.fab.FloatingActionButton refreshFabItem;
+
 
 
     public static Summary newInstance(int sectionNumber) {
@@ -98,8 +111,22 @@ public class Summary extends Fragment {
     public void initVars(View view){
         formatter = NumberFormat.getCurrencyInstance();
         realm = Realm.getDefaultInstance();
-
+        refreshFabItem = (com.github.clans.fab.FloatingActionButton)view.findViewById(R.id.refresh_fab);
         money = (TextView)view.findViewById(R.id.money);
+
+        setupRefreshButton();
+    }
+
+    /**
+     * Adds the on click / refresh login for refreshing the available stocks
+     */
+    public void setupRefreshButton(){
+        refreshFabItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMoney();
+            }
+        });
     }
 
     @Override

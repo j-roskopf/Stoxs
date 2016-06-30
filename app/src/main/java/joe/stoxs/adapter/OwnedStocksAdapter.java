@@ -15,7 +15,11 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 
+import java.util.ArrayList;
+
 import io.realm.RealmResults;
+import joe.stoxs.DetailSearchView;
+import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.OwnedStockDetailView;
 import joe.stoxs.R;

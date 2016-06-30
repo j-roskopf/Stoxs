@@ -2,11 +2,20 @@ package joe.stoxs.Fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import joe.stoxs.Object.Markit.CompanyDetail;
 import joe.stoxs.R;
+import joe.stoxs.adapter.FavoritesAdapter;
+import joe.stoxs.adapter.OwnedStocksAdapter;
 
 /**
  * Created by Joe on 6/15/2016.
@@ -15,6 +24,19 @@ import joe.stoxs.R;
 public class Watchlist extends Fragment {
 
     private static String ARG_SECTION_NUMBER = "arg_section_number";
+
+    /**
+     * non ui
+     */
+
+    Realm realm;
+
+    /**
+     * UI
+     */
+
+    TextView errorMessage;
+    RecyclerView favoritesList;
 
 
     public static Watchlist newInstance(int sectionNumber) {
@@ -28,18 +50,50 @@ public class Watchlist extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.watchlist_fragment, container, false);
+        View view = inflater.inflate(R.layout.watchlist_fragment, container, false);
+
+        initVars(view);
+
+        getAndDisplayFavorites();
+
+        return view;
+    }
+
+    public void initVars(View view){
+        realm = Realm.getDefaultInstance();
+        errorMessage = (TextView) view.findViewById(R.id.errorMessage);
+        favoritesList = (RecyclerView)view.findViewById(R.id.favoritesList);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
+        realm.close();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    public void getAndDisplayFavorites(){
+
+        RealmResults<CompanyDetail> results = realm.where(CompanyDetail.class).findAll();
+
+        if(results.size() <= 0){
+            errorMessage.setVisibility(View.VISIBLE);
+            favoritesList.setVisibility(View.INVISIBLE);
+        }else{
+            errorMessage.setVisibility(View.INVISIBLE);
+            favoritesList.setVisibility(View.VISIBLE);
+        }
+
+        FavoritesAdapter adapter = new FavoritesAdapter(results,getContext());
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        favoritesList.setLayoutManager(llm);
+        favoritesList.setAdapter(adapter);
+
     }
 
 }

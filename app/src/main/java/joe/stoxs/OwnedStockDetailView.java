@@ -1,6 +1,8 @@
 package joe.stoxs;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.androidquery.util.AQUtility;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 
@@ -27,10 +30,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import joe.stoxs.Constant.Constants;
+import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.Markit.CompanyDetail;
 import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
+
+import static android.R.attr.format;
+import static joe.stoxs.R.id.boughtAtPriceValue;
+import static joe.stoxs.R.id.companyHigh;
+import static joe.stoxs.R.id.container;
+import static joe.stoxs.R.id.seekbar;
+import static joe.stoxs.R.id.totalAmount;
+import static joe.stoxs.R.id.totalPrice;
 
 public class OwnedStockDetailView extends AppCompatActivity implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2 {
 
@@ -219,11 +232,20 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
         });
     }
 
+    /**
+     *
+     * Adds amount to the user's money.
+     *
+     *
+     * @param amountToAdd - amount you're selling the stocks for. To be added to the profile class in the DB
+     */
     public void addMoneyToUser(double amountToAdd){
             Profile profile = realm.where(Profile.class).findFirst();
             realm.beginTransaction();
 
+            Log.d("D","sellMoneyDebug current amount of money = " + profile.getMoney());
             profile.setMoney(profile.getMoney() + amountToAdd);
+            Log.d("D","sellMoneyDebug current amount of money after selling = " + profile.getMoney());
 
             realm.commitTransaction();
 

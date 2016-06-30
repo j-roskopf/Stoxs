@@ -24,8 +24,14 @@ import java.text.NumberFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import joe.stoxs.Constant.Constants;
+import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.Markit.CompanyDetail;
+import joe.stoxs.Object.Profile;
+
+import static joe.stoxs.R.id.favorite;
 
 public class DetailSearchView extends AppCompatActivity {
 
@@ -38,6 +44,15 @@ public class DetailSearchView extends AppCompatActivity {
     String symbolToPass;
     String priceToPass;
     String volumeToPass;
+
+    //handle database
+    Realm realm;
+
+    //Used to store the object we want to favorite
+    CompanyDetail companyToAddToFavorites;
+
+    //used to format the money to the instance
+    NumberFormat formatter;
 
     /**
      * UI
@@ -100,8 +115,6 @@ public class DetailSearchView extends AppCompatActivity {
         setContentView(R.layout.activity_detail_search_view);
         ButterKnife.bind(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         progress.startAnimation();
 
         String symbol = getIntent().getExtras().getString("symbol");
@@ -116,6 +129,8 @@ public class DetailSearchView extends AppCompatActivity {
 
     public void initVars(){
         aq = new AQuery(this);
+        formatter = NumberFormat.getCurrencyInstance();
+        realm = Realm.getDefaultInstance();
     }
 
     public void getDetails(String symbol){
@@ -201,7 +216,8 @@ public class DetailSearchView extends AppCompatActivity {
     }
 
     public void displayData(CompanyDetail c){
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+        companyToAddToFavorites = c;
 
         companyName.setText(c.getName() + "(" + c.getSymbol() +")");
 
@@ -280,6 +296,12 @@ public class DetailSearchView extends AppCompatActivity {
         return second / first;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -310,12 +332,52 @@ public class DetailSearchView extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.favorite) {
-            Snackbar.make(findViewById(R.id.activity_detail_search_view), "Implement favorites", Snackbar.LENGTH_LONG)
-                    .show();
+        if (id == favorite) {
+            favoriteStock();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Checks if the company is null, if not, makes a deep copy of it and saves it to the db
+     */
+    public void favoriteStock(){
+        if(companyToAddToFavorites == null){
+            Snackbar.make(findViewById(R.id.activity_detail_search_view), "Something went wrong with favoriting", Snackbar.LENGTH_SHORT)
+                    .show();
+        }else{
+            realm.beginTransaction();
+            CompanyDetail c = realm.createObject(CompanyDetail.class);
+            deepCopy(c,companyToAddToFavorites);
+            c = companyToAddToFavorites;
+            realm.commitTransaction();
+
+            Snackbar.make(findViewById(R.id.activity_detail_search_view), "Favorited!", Snackbar.LENGTH_SHORT)
+                    .show();
+
+        }
+    }
+
+    /**
+     * transfers all of the fields from companyTwo into companyOne
+     * @param companyOne
+     * @param companyTwo
+     */
+    public void deepCopy(CompanyDetail companyOne, CompanyDetail companyTwo){
+        companyOne.setName(companyTwo.getName());
+        companyOne.setSymbol(companyTwo.getSymbol());
+        companyOne.setLastPrice(companyTwo.getLastPrice());
+        companyOne.setChange(companyTwo.getChange());
+        companyOne.setChangePercent(companyTwo.getChangePercent());
+        companyOne.setTimestamp(companyTwo.getTimestamp());
+        companyOne.setMarketCap(companyTwo.getMarketCap());
+        companyOne.setVolume(companyTwo.getVolume());
+        companyOne.setChangeYTD(companyTwo.getChangeYTD());
+        companyOne.setChangePercentYTD(companyTwo.getChangePercentYTD());
+        companyOne.setHigh(companyTwo.getHigh());
+        companyOne.setLow(companyTwo.getLow());
+        companyOne.setOpen(companyTwo.getOpen());
     }
 }
