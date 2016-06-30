@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorAccent">#448AFF</color>
 
-    <color name="moneyColor">#259b24</color>
-    <color name="negativeColor">#e51c23</color>
+    <color name="moneyColor">#4CAF50</color>
+    <color name="negativeColor">#F44336</color>
 
     <color name="textColor">#ff263238</color>
 

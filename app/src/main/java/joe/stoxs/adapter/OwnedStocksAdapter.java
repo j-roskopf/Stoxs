@@ -15,11 +15,7 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 
-import java.util.ArrayList;
-
 import io.realm.RealmResults;
-import joe.stoxs.DetailSearchView;
-import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.OwnedStockDetailView;
 import joe.stoxs.R;
@@ -40,7 +36,6 @@ public class OwnedStocksAdapter extends RecyclerView.Adapter<OwnedStocksAdapter.
     }
 
     public class StockViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
         TextView stockName;
         TextView stockAmount;
         ImageView stockImage;
@@ -48,11 +43,10 @@ public class OwnedStocksAdapter extends RecyclerView.Adapter<OwnedStocksAdapter.
 
         StockViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
             stockName = (TextView)itemView.findViewById(R.id.stockName);
             stockAmount = (TextView)itemView.findViewById(R.id.stockAmount);
             stockImage = (ImageView)itemView.findViewById(R.id.stockImage);
-            cv.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, OwnedStockDetailView.class);
@@ -73,18 +67,15 @@ public class OwnedStocksAdapter extends RecyclerView.Adapter<OwnedStocksAdapter.
 
     @Override
     public StockViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.owned_stock_item, viewGroup, false);
-        StockViewHolder svh = new StockViewHolder(v);
-
-        return svh;
+        return new StockViewHolder(LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.owned_stock_item, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(StockViewHolder stockViewHolder, int i) {
         stockViewHolder.stockName.setText(stocks.get(i).getName());
         stockViewHolder.stockAmount.setText("Amount owned: " + stocks.get(i).getAmountOwned());
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(stocks.get(i).getName().substring(0,1), getMatColor("500"));
+        TextDrawable drawable = TextDrawable.builder().buildRound(stocks.get(i).getName().substring(0,1), getMatColor("500"));
         stockViewHolder.position = i;
         stockViewHolder.stockImage.setImageDrawable(drawable);
     }

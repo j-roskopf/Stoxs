@@ -4,9 +4,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.ListViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,6 +43,7 @@ public class SearchResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_result);
 
         setTitle("Search Results");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initVars();
 
@@ -88,7 +86,7 @@ public class SearchResultActivity extends AppCompatActivity {
                     Log.d("D","searchDebug with json = " + json);
 
                     Company company;
-                    ArrayList<Company> toReturn = new ArrayList<Company>();
+                    ArrayList<Company> toReturn = new ArrayList<>();
 
                     for(int i = 0; i < json.length(); i++){
                         try{
@@ -129,8 +127,7 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     public void displayData(final ArrayList<Company> toDisplay){
-        SearchAdapter adapter = new SearchAdapter(this,toDisplay);
-        listView.setAdapter(adapter);
+        listView.setAdapter(new SearchAdapter(this,toDisplay));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

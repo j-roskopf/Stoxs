@@ -1,7 +1,6 @@
 package joe.stoxs.Fragments;
 
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,14 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
-import java.util.ArrayList;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -24,7 +19,6 @@ import io.realm.RealmResults;
 import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.R;
 import joe.stoxs.adapter.OwnedStocksAdapter;
-import joe.stoxs.adapter.SearchAdapter;
 
 /**
  * Created by Joe on 5/25/2016.
@@ -57,8 +51,6 @@ public class BaseStockSearch extends Fragment {
     TextView errorMessage;
 
     FloatingActionButton fab;
-
-
 
 
     public static BaseStockSearch newInstance(int sectionNumber) {

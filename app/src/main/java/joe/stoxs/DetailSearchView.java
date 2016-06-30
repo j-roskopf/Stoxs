@@ -94,14 +94,13 @@ public class DetailSearchView extends AppCompatActivity {
     com.eyalbira.loadingdots.LoadingDots progress;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_search_view);
         ButterKnife.bind(this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progress.startAnimation();
 
@@ -239,12 +238,14 @@ public class DetailSearchView extends AppCompatActivity {
         }else{
             companyLowPercent.setTextColor(getResources().getColor(R.color.negativeColor));
         }
+
         Double highPercent = calculatePercent(c.getLastPrice(),c.getHigh());
         if(highPercent >= 1){
             companyHighPercent.setTextColor(getResources().getColor(R.color.moneyColor));
         }else{
             companyHighPercent.setTextColor(getResources().getColor(R.color.negativeColor));
         }
+
         Double openPercent = calculatePercent(c.getLastPrice(),c.getOpen());
         if(openPercent >= 1){
             companyOpenPercent.setTextColor(getResources().getColor(R.color.moneyColor));

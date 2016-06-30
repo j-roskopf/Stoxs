@@ -1,18 +1,14 @@
 package joe.stoxs.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -21,11 +17,8 @@ import java.util.ArrayList;
 
 import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.R;
-import joe.stoxs.DetailSearchView;
 
-import static android.support.v7.widget.AppCompatDrawableManager.get;
 import static com.amulyakhare.textdrawable.TextDrawable.builder;
-import static joe.stoxs.R.id.cv;
 
 /**
  * Created by Joe on 6/1/2016.
@@ -43,9 +36,8 @@ public class SearchAdapter extends ArrayAdapter<Company> {
 
     @Override
     public View getView(int i, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.search_result_item, parent, false);
+        View rowView = ((LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_result_item, parent, false);
 
         TextView name = (TextView) rowView.findViewById(R.id.name);
         TextView symbol = (TextView) rowView.findViewById(R.id.symbol);

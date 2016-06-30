@@ -1,53 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:id="@+id/activity_search_result"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".SearchResultActivity">
 
-    <android.support.v7.widget.CardView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_margin="16dp"
         android:layout_height="wrap_content"
-        android:id="@+id/cv"
+        android:padding="16dp"
         >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/stockImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            />
+
+        <TextView
+            android:id="@+id/stockName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            >
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/stockImage"
+            android:text="name"
+            android:textSize="16sp"
+            android:textColor="@color/textColor"
+            />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/stockImage"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                />
+        <TextView
+            android:id="@+id/stockAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stockName"
+            android:layout_toRightOf="@+id/stockImage"
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            android:text="age"
+            android:layout_marginBottom="4dp"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="name"
-                android:id="@+id/stockName"
-                android:layout_toRightOf="@+id/stockImage"
-                android:layout_alignParentTop="true"
-                android:textSize="30sp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="age"
-                android:id="@+id/stockAmount"
-                android:layout_toRightOf="@+id/stockImage"
-                android:layout_below="@+id/stockName"
-                />
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
 </RelativeLayout>

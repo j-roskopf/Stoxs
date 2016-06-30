@@ -35,8 +35,6 @@ import joe.stoxs.Fragments.BaseStockSearch;
 import joe.stoxs.Fragments.Summary;
 import joe.stoxs.Fragments.Watchlist;
 
-import static joe.stoxs.R.id.sellButton;
-
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -242,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return "Watchlist";
                 case 2:
-                    return "My Summary";
+                    return "Summary";
             }
             return null;
         }

@@ -21,8 +21,6 @@
         android:layout_height="wrap_content"
         android:text="You don't appear to have purchased any stocks. Try searching for some!"/>
 
-
-
     </android.support.design.widget.CoordinatorLayout>
 
 

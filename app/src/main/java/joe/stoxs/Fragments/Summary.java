@@ -1,28 +1,18 @@
 package joe.stoxs.Fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.androidquery.AQuery;
-
-import org.w3c.dom.Text;
-
 import java.text.NumberFormat;
 import java.util.Calendar;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import joe.stoxs.Object.Profile;
-import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.R;
 
 /**

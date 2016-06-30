@@ -1,6 +1,5 @@
 package joe.stoxs.Object;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**

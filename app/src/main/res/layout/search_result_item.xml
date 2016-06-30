@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/baseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_search_result"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="16dp"
     tools:context=".SearchResultActivity">
 
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:id="@+id/baseLayout"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            >
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/photo"
+        android:text="name"
+        android:textColor="@color/textColor"
+        android:textSize="20sp"
+        />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/photo"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="name"
-                android:id="@+id/name"
-                android:textColor="@color/textColor"
-                android:layout_toRightOf="@+id/photo"
-                android:layout_alignParentTop="true"
-                android:textSize="20sp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="symbol"
-                android:textColor="@color/textColor"
-                android:textSize="16sp"
-                android:id="@+id/symbol"
-                android:layout_toRightOf="@+id/photo"
-                android:layout_below="@+id/name"
-                />
-
-        </RelativeLayout>
-
+    <TextView
+        android:id="@+id/symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_toRightOf="@+id/photo"
+        android:text="symbol"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        />
 
 </RelativeLayout>
