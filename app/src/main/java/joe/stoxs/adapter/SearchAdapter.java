@@ -23,9 +23,7 @@ import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.R;
 import joe.stoxs.DetailSearchView;
 
-import static android.support.v7.widget.AppCompatDrawableManager.get;
 import static com.amulyakhare.textdrawable.TextDrawable.builder;
-import static joe.stoxs.R.id.cv;
 
 /**
  * Created by Joe on 6/1/2016.

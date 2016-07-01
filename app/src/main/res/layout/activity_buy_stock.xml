@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+
+<RelativeLayout
     android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
@@ -7,11 +9,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="joe.stoxs.BuyStockActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <!--<me.grantland.widget.AutofitTextView
             android:id="@+id/companyNameBuy"
@@ -122,6 +119,15 @@
             android:layout_toLeftOf="@+id/numberButton"
             android:layout_toStartOf="@+id/numberButton"/>
 
-    </RelativeLayout>
+        <Button
+             android:id ="@+id/buyButton"
+             android:layout_width="match_parent"
+             android:textColor="@android:color/white"
+             android:layout_alignParentBottom="true"
+             android:background="@drawable/circular_background_green"
+             android:layout_height="wrap_content"
+             android:text="Buy"
+         />
 
-</ScrollView>
+</RelativeLayout>
+

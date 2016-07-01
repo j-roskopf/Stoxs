@@ -37,6 +37,7 @@ public class Watchlist extends Fragment {
 
     TextView errorMessage;
     RecyclerView favoritesList;
+    com.github.clans.fab.FloatingActionButton refreshFabItem;
 
 
     public static Watchlist newInstance(int sectionNumber) {
@@ -56,6 +57,8 @@ public class Watchlist extends Fragment {
 
         getAndDisplayFavorites();
 
+        setupRefreshButton();
+
         return view;
     }
 
@@ -63,6 +66,8 @@ public class Watchlist extends Fragment {
         realm = Realm.getDefaultInstance();
         errorMessage = (TextView) view.findViewById(R.id.errorMessage);
         favoritesList = (RecyclerView)view.findViewById(R.id.favoritesList);
+        refreshFabItem = (com.github.clans.fab.FloatingActionButton) view.findViewById(R.id.refresh_fab);
+
 
     }
 
@@ -75,6 +80,15 @@ public class Watchlist extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    public void setupRefreshButton(){
+        refreshFabItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAndDisplayFavorites();
+            }
+        });
     }
 
     public void getAndDisplayFavorites(){

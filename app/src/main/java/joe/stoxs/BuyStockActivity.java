@@ -28,20 +28,22 @@ import io.realm.RealmResults;
 import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 
+import static joe.stoxs.R.id.buyButton;
+import static joe.stoxs.R.id.companyName;
+
 public class BuyStockActivity extends AppCompatActivity implements NumberPickerDialogFragment
         .NumberPickerDialogHandlerV2 {
 
     /**
      * UI
      */
-    @BindView(R.id.companyNameBuy)
-    TextView companyName;
 
-    @BindView(R.id.companyPriceBuy)
-    TextView companyPrice;
 
     @BindView(R.id.totalPrice)
     TextView totalPrice;
+
+    @BindView(R.id.buyButton)
+    Button buyButton;
 
     @BindView(R.id.totalAmount)
     TextView totalAmount;
@@ -84,11 +86,69 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         getSupportActionBar().setTitle("Buy: " + symbolValue + " at " + priceOfStock + "/stock");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        displayInfo(companyNameValue, symbolValue, priceOfStock);
-
         setupSeekBar(volume, priceOfStock);
 
+        setupBuyButton();
+
         setupNumberButton(volume);
+    }
+
+    public void setupBuyButton() {
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!totalPriceOfStock.equals("") && !totalAmountOfStock.equals("")) {
+                    if (hasEnoughtMoney(valueOfTotalPriceOfStock)) {
+                        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+                                .setTitleText("Confirm purchase")
+                                .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyNameValue + " for " + totalPriceOfStock)
+                                .setConfirmText("Buy!")
+                                .setCancelText("Cancel!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        realm.beginTransaction();
+
+                                        UserOwnedStock stock = realm.createObject(UserOwnedStock.class); // Create a new object
+                                        stock.setName(companyNameValue);
+                                        stock.setSymbol(symbolValue);
+                                        stock.setPrice(priceOfStock);
+                                        stock.setAmountOwned(totalAmountOfStock);
+
+                                        realm.commitTransaction();
+
+                                        sDialog
+                                                .setTitleText("Success!")
+                                                .setContentText("Your stocks have been purchase!")
+                                                .setConfirmText("OK")
+                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                        finish();
+                                                    }
+                                                })
+                                                .showCancelButton(false)
+                                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                    }
+                                })
+                                .show();
+                    } else {
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Error")
+                                .setContentText("It looks like you don't have enough money to make that purchase")
+                                .setConfirmText("Okay!")
+                                .show();
+                    }
+                } else {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Error")
+                            .setContentText("Please select some stocks")
+                            .setConfirmText("Okay!")
+                            .show();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -111,10 +171,10 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         boolean toReturn;
         RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
 
-        if(profiles.size() > 0) {
+        if (profiles.size() > 0) {
             Profile profile = realm.where(Profile.class).findFirst();
             toReturn = checkIfUserHasEnough(amountToPurchaseFor, profile.getMoney());
-            if(toReturn) {
+            if (toReturn) {
                 double amountLeft = profile.getMoney() - Double.parseDouble(amountToPurchaseFor);
                 updateUserMoney(amountLeft);
             }
@@ -139,7 +199,7 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         realm.commitTransaction();
 
         boolean hasEnough = checkIfUserHasEnough(amountToPurchaseFor, DEFAULT_STARTING_MONEY);
-        if(hasEnough) {
+        if (hasEnough) {
             double amountLeft = DEFAULT_STARTING_MONEY - Double.parseDouble(amountToPurchaseFor);
             updateUserMoney(amountLeft);
             return true;
@@ -153,7 +213,7 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         Profile profile = realm.where(Profile.class).findFirst();
         realm.beginTransaction();
 
-        if(profile.getMoney() >= amountLeft) {
+        if (profile.getMoney() >= amountLeft) {
             profile.setMoney(amountLeft);
         } else {
             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
@@ -166,7 +226,7 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
     }
 
     public boolean checkIfUserHasEnough(String amountToPurchase, double amountUserHas) {
-        if(Double.parseDouble(amountToPurchase) <= amountUserHas) {
+        if (Double.parseDouble(amountToPurchase) <= amountUserHas) {
             return true;
         } else {
             return false;
@@ -206,16 +266,6 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         });
     }
 
-    public void displayInfo(String name, String symbol, String price) {
-
-        companyName.setText(name);
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-
-        price = formatter.format(Double.parseDouble(price));
-
-        companyPrice.setText(price);
-    }
 
     public void setupNumberButton(final String volume) {
         specifyNumber.setOnClickListener(new View.OnClickListener() {
@@ -259,11 +309,11 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.buy) {
-            if(!totalPriceOfStock.equals("") && !totalAmountOfStock.equals("")){
-                if(hasEnoughtMoney(valueOfTotalPriceOfStock)){
+            if (!totalPriceOfStock.equals("") && !totalAmountOfStock.equals("")) {
+                if (hasEnoughtMoney(valueOfTotalPriceOfStock)) {
                     new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                             .setTitleText("Confirm purchase")
-                            .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyName.getText() + " for " + totalPriceOfStock)
+                            .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyName + " for " + totalPriceOfStock)
                             .setConfirmText("Buy!")
                             .setCancelText("Cancel!")
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -294,14 +344,14 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
                                 }
                             })
                             .show();
-                }else{
+                } else {
                     new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Error")
                             .setContentText("It looks like you don't have enough money to make that purchase")
                             .setConfirmText("Okay!")
                             .show();
                 }
-            }else{
+            } else {
                 new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Error")
                         .setContentText("Please select some stocks")

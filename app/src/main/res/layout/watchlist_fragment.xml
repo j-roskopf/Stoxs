@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+
     android:layout_height="match_parent">
 
     <TextView
@@ -17,5 +19,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fab:menu_labels_ellipsize="end"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        fab:menu_labels_singleLine="true"
+        fab:menu_shadowColor="#444"
+        fab:menu_colorNormal="@color/colorPrimaryDark"
+        fab:menu_colorPressed="@color/primary"
+        fab:menu_colorRipple="@color/moneyColor"
+        fab:menu_backgroundColor="#ccffffff">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_attach_money_white"
+            fab:fab_size="mini"
+            fab:fab_label="Placeholder button 1" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_label="Placeholder button 2" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/refresh_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh_white"
+            fab:fab_size="mini"
+            fab:fab_label="Refresh" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

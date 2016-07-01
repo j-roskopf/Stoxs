@@ -37,7 +37,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Stoc
     }
 
     public class StockViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
         TextView stockName;
         TextView stockAmount;
         ImageView stockImage;
@@ -45,15 +44,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Stoc
 
         StockViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
             stockName = (TextView)itemView.findViewById(R.id.stockName);
             stockAmount = (TextView)itemView.findViewById(R.id.stockAmount);
             stockImage = (ImageView)itemView.findViewById(R.id.stockImage);
-            cv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
         }
     }
 
