@@ -1,6 +1,7 @@
 package joe.stoxs;
 
 import android.content.Context;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +29,6 @@ import io.realm.RealmResults;
 import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 
-import static joe.stoxs.R.id.buyButton;
 import static joe.stoxs.R.id.companyName;
 
 public class BuyStockActivity extends AppCompatActivity implements NumberPickerDialogFragment
@@ -37,13 +37,8 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
     /**
      * UI
      */
-
-
     @BindView(R.id.totalPrice)
     TextView totalPrice;
-
-    @BindView(R.id.buyButton)
-    Button buyButton;
 
     @BindView(R.id.totalAmount)
     TextView totalAmount;
@@ -83,72 +78,12 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         priceOfStock = getIntent().getExtras().getString("price");
         String volume = getIntent().getExtras().getString("volume");
 
-        getSupportActionBar().setTitle("Buy: " + symbolValue + " at " + priceOfStock + "/stock");
+        getSupportActionBar().setTitle("Buy: " + symbolValue + " at " + "$" + priceOfStock + "/stock");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setupSeekBar(volume, priceOfStock);
 
-        setupBuyButton();
-
         setupNumberButton(volume);
-    }
-
-    public void setupBuyButton() {
-        buyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!totalPriceOfStock.equals("") && !totalAmountOfStock.equals("")) {
-                    if (hasEnoughtMoney(valueOfTotalPriceOfStock)) {
-                        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
-                                .setTitleText("Confirm purchase")
-                                .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyNameValue + " for " + totalPriceOfStock)
-                                .setConfirmText("Buy!")
-                                .setCancelText("Cancel!")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sDialog) {
-                                        realm.beginTransaction();
-
-                                        UserOwnedStock stock = realm.createObject(UserOwnedStock.class); // Create a new object
-                                        stock.setName(companyNameValue);
-                                        stock.setSymbol(symbolValue);
-                                        stock.setPrice(priceOfStock);
-                                        stock.setAmountOwned(totalAmountOfStock);
-
-                                        realm.commitTransaction();
-
-                                        sDialog
-                                                .setTitleText("Success!")
-                                                .setContentText("Your stocks have been purchase!")
-                                                .setConfirmText("OK")
-                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                    @Override
-                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                        finish();
-                                                    }
-                                                })
-                                                .showCancelButton(false)
-                                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                    }
-                                })
-                                .show();
-                    } else {
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Error")
-                                .setContentText("It looks like you don't have enough money to make that purchase")
-                                .setConfirmText("Okay!")
-                                .show();
-                    }
-                } else {
-                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Error")
-                            .setContentText("Please select some stocks")
-                            .setConfirmText("Okay!")
-                            .show();
-                }
-
-            }
-        });
     }
 
     @Override
@@ -233,8 +168,22 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         }
     }
 
+    private int calculateAmountUserCanBuy(double price, int volume){
+        RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
+
+        int amount = 0;
+        if (profiles.size() > 0) {
+            Profile profile = realm.where(Profile.class).findFirst();
+            amount = (int) (profile.getMoney()/price);
+            if(amount > volume)
+                amount = volume;
+        }
+
+        return amount;
+    }
+
     public void setupSeekBar(String volume, final String price) {
-        seekbar.setMax(Integer.parseInt(volume));
+        seekbar.setMax(calculateAmountUserCanBuy(Double.parseDouble(price), Integer.parseInt(volume)));
         seekbar.setIndicatorPopupEnabled(false);
         seekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             Double priceToUse = Double.parseDouble(price);
@@ -242,8 +191,6 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
 
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-
-
                 String price = formatter.format((value * priceToUse));
                 totalAmount.setText(value + "");
                 valueOfTotalPriceOfStock = (value * priceToUse) + "";
@@ -313,7 +260,7 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
                 if (hasEnoughtMoney(valueOfTotalPriceOfStock)) {
                     new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                             .setTitleText("Confirm purchase")
-                            .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyName + " for " + totalPriceOfStock)
+                            .setContentText("You are purchasing " + totalAmountOfStock + " stocks of " + companyNameValue + " for " + totalPriceOfStock)
                             .setConfirmText("Buy!")
                             .setCancelText("Cancel!")
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {

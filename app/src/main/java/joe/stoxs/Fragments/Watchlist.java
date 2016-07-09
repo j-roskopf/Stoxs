@@ -67,8 +67,6 @@ public class Watchlist extends Fragment {
         errorMessage = (TextView) view.findViewById(R.id.errorMessage);
         favoritesList = (RecyclerView)view.findViewById(R.id.favoritesList);
         refreshFabItem = (com.github.clans.fab.FloatingActionButton) view.findViewById(R.id.refresh_fab);
-
-
     }
 
     @Override

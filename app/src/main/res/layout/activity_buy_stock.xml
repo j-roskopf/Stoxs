@@ -56,9 +56,12 @@
         <TextView
             android:id="@+id/totalStocksText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/numberButton"
-            android:layout_margin="16dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
             android:maxLines="1"
             android:text="Total Stocks:"
             android:textColor="@android:color/black"
@@ -67,10 +70,10 @@
         <TextView
             android:id="@+id/totalAmount"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/numberButton"
+            android:layout_marginTop="0dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
             android:layout_toRightOf="@id/totalStocksText"
             android:maxLines="1"
             android:text="0"
@@ -82,7 +85,7 @@
         <TextView
             android:id="@+id/totalPriceText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/totalStocksText"
             android:layout_margin="16dp"
             android:maxLines="2"
@@ -93,7 +96,7 @@
         <TextView
             android:id="@+id/totalPrice"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/totalStocksText"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
@@ -118,16 +121,6 @@
             android:layout_alignTop="@+id/numberButton"
             android:layout_toLeftOf="@+id/numberButton"
             android:layout_toStartOf="@+id/numberButton"/>
-
-        <Button
-             android:id ="@+id/buyButton"
-             android:layout_width="match_parent"
-             android:textColor="@android:color/white"
-             android:layout_alignParentBottom="true"
-             android:background="@drawable/circular_background_green"
-             android:layout_height="wrap_content"
-             android:text="Buy"
-         />
 
 </RelativeLayout>
 

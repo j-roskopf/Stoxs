@@ -127,9 +127,9 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_owned_stock_detail_view);
 
-        ButterKnife.bind(this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ButterKnife.bind(this);
 
         progress.setVisibility(View.VISIBLE);
         container.setVisibility(View.GONE);
@@ -139,6 +139,8 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
         String symbol = getIntent().getExtras().getString("symbol");
         String amountOwned  = getIntent().getExtras().getString("amountOwned");
         String priceBoughtAt = getIntent().getExtras().getString("amountPurchaseAt");
+        getSupportActionBar().setTitle(amountOwned + " stocks owned of " + symbol);
+
 
         priceStockBoughtAt = priceBoughtAt;
         amountCurrentlyOwned = amountOwned;
