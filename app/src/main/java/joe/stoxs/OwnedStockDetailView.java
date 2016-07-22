@@ -77,6 +77,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
     int amountWillSell = 0;
 
+    String companyName;
 
     /**
      * ui
@@ -85,20 +86,11 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
     @BindView(R.id.seekbar)
     org.adw.library.widgets.discreteseekbar.DiscreteSeekBar seekbar;
 
-    @BindView(R.id.amountOwnedStocksValue)
-    TextView amountOwnedStocksValue;
-
     @BindView(R.id.boughtAtPriceValue)
     TextView boughtAtPriceValue;
 
-    @BindView(R.id.totalAmount)
-    TextView totalAmount;
-
     @BindView(R.id.amountEarnedValue)
     TextView amountEarnedValue;
-
-    @BindView(R.id.companyNameBuy)
-    TextView companyName;
 
     @BindView(R.id.companyPriceBuy)
     TextView companyPrice;
@@ -190,7 +182,7 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                     String formattedPrice = formatter.format(totalPriceOfStock);
                     new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                             .setTitleText("Confirm purchase")
-                            .setContentText("You are selling " + amountWillSell + " stocks of " + companyName.getText() + " for " + formattedPrice)
+                            .setContentText("You are selling " + amountWillSell + " stocks of " + companyName + " for " + formattedPrice)
                             .setConfirmText("Sell!")
                             .setCancelText("Cancel!")
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -200,9 +192,9 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                                     final boolean soldAll = sell(amountWillSell);
                                     String message;
                                     if(soldAll){
-                                        message = "You have sold all your stocks for " + companyName.getText();
+                                        message = "You have sold all your stocks for " + companyName;
                                     }else{
-                                        message = "You have sold " + amountWillSell + " of your stocks for " + companyName.getText();
+                                        message = "You have sold " + amountWillSell + " of your stocks for " + companyName;
                                     }
 
                                     sDialog
@@ -323,10 +315,10 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                         if(APIStatus.equals("SUCCESS")){
                             String name = json.getString("Name");
                             String symbol = json.getString("Symbol");
-                            companyName.setText(name + "(" + symbol +")");
+                            companyName = name + "(" + symbol +")";
                             companyNameValue = name;
                             String lastPrice = json.getString("LastPrice");
-                            companyPrice.setText(lastPrice);
+                            companyPrice.setText("$" + lastPrice);
                             currentPrice = lastPrice;
                             setupSeekBar(amountOwned,lastPrice,amountPurchasedAt);
 
@@ -392,7 +384,6 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
     }
 
     public void displayInfo(String amountOwned, String priceBoughtAt){
-        amountOwnedStocksValue.setText(amountOwned);
         boughtAtPriceValue.setText(priceBoughtAt);
     }
 
@@ -429,7 +420,6 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
 
                 String price = formatter.format((value * priceToUse));
-                totalAmount.setText(value+"");
                 amountEarnedValue.setText(price);
 
             }
@@ -482,7 +472,6 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
             totalPriceValue.setText(totalFormatted);
 
             String price = formatter.format((amount * current));
-            totalAmount.setText(amount+"");
             amountEarnedValue.setText(price);
         }else if (reference == REFERENCE_SELL_AMOUNT){
             //when the sell amount used to open the number picker dialog
