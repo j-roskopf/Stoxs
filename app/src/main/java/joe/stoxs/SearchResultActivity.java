@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,8 +23,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import joe.stoxs.Constant.Constants;
 import joe.stoxs.Object.Markit.Company;
+import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.adapter.SearchAdapter;
 
 public class SearchResultActivity extends AppCompatActivity {
@@ -141,5 +144,17 @@ public class SearchResultActivity extends AppCompatActivity {
                 getApplicationContext().startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id == android.R.id.home){
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

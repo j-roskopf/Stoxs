@@ -21,9 +21,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import joe.stoxs.Constant.Constants;
 import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.R;
+
+import static joe.stoxs.Constant.Constants.DEFAULT_STARTING_MONEY;
 
 /**
  * Created by Joe on 6/15/2016.
@@ -39,8 +42,6 @@ public class Summary extends Fragment {
     private NumberFormat formatter;
 
     private Realm realm;
-
-    private final double DEFAULT_STARTING_MONEY = 50000;
 
 
     /**

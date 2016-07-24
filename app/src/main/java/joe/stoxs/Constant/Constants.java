@@ -16,4 +16,6 @@ public class Constants {
     public static String BASE_API_URL_SYMBOL = "http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=";
     public static String BASE_API_URL_SEARCH = "http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=";
 
+    public static final double DEFAULT_STARTING_MONEY = 50000;
+
 }

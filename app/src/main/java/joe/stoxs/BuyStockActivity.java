@@ -5,6 +5,7 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,10 +27,14 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import joe.stoxs.Constant.Constants;
 import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 
+import static joe.stoxs.Constant.Constants.DEFAULT_STARTING_MONEY;
 import static joe.stoxs.R.id.companyName;
+import static joe.stoxs.R.id.money;
+import static joe.stoxs.R.id.stockName;
 
 public class BuyStockActivity extends AppCompatActivity implements NumberPickerDialogFragment
         .NumberPickerDialogHandlerV2 {
@@ -62,7 +67,6 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
     Context context;
     String companyNameValue;
     String symbolValue;
-    private final double DEFAULT_STARTING_MONEY = 50000;
 
 
     @Override
@@ -109,6 +113,21 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         if (profiles.size() > 0) {
             Profile profile = realm.where(Profile.class).findFirst();
             toReturn = checkIfUserHasEnough(amountToPurchaseFor, profile.getMoney());
+
+        } else {
+            toReturn = createProfile(amountToPurchaseFor);
+        }
+
+        return toReturn;
+    }
+
+    public boolean makePurchase(String amountToPurchaseFor) {
+        boolean toReturn;
+        RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
+
+        if (profiles.size() > 0) {
+            Profile profile = realm.where(Profile.class).findFirst();
+            toReturn = checkIfUserHasEnough(amountToPurchaseFor, profile.getMoney());
             if (toReturn) {
                 double amountLeft = profile.getMoney() - Double.parseDouble(amountToPurchaseFor);
                 updateUserMoney(amountLeft);
@@ -123,11 +142,11 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
     /**
      * creates a profile with the default amount of money if no profile is detected
      */
-    public boolean createProfile(String amountToPurchaseFor) {
+    public boolean createProfileAndMakePurchase(String amountToPurchaseFor) {
         realm.beginTransaction();
 
         Profile profile = realm.createObject(Profile.class); // Create a new object
-        profile.setMoney(DEFAULT_STARTING_MONEY);
+        profile.setMoney(Constants.DEFAULT_STARTING_MONEY);
         profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
 
 
@@ -137,6 +156,28 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         if (hasEnough) {
             double amountLeft = DEFAULT_STARTING_MONEY - Double.parseDouble(amountToPurchaseFor);
             updateUserMoney(amountLeft);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * creates a profile with the default amount of money if no profile is detected
+     */
+    public boolean createProfile(String amountToPurchaseFor) {
+        realm.beginTransaction();
+
+        Profile profile = realm.createObject(Profile.class); // Create a new object
+        profile.setMoney(Constants.DEFAULT_STARTING_MONEY);
+        profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+
+
+        realm.commitTransaction();
+
+        boolean hasEnough = checkIfUserHasEnough(amountToPurchaseFor, DEFAULT_STARTING_MONEY);
+        if (hasEnough) {
             return true;
         } else {
             return false;
@@ -169,17 +210,36 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
     }
 
     private int calculateAmountUserCanBuy(double price, int volume){
+        Log.d("D","calculateAmountUserCanBuyDebug");
         RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
-
+        Log.d("D","calculateAmountUserCanBuyDebug with profiles.size = " + profiles.size());
         int amount = 0;
         if (profiles.size() > 0) {
             Profile profile = realm.where(Profile.class).findFirst();
             amount = (int) (profile.getMoney()/price);
             if(amount > volume)
                 amount = volume;
+        }else{
+            //first time loading I guess, create a profile with the default amount of money
+            createProfile();
+            amount = (int) (DEFAULT_STARTING_MONEY/price);
         }
 
         return amount;
+    }
+
+    /**
+     * creates a profile with the default amount of money if no profile is detected
+     */
+    public void createProfile(){
+        realm.beginTransaction();
+
+        Profile profile = realm.createObject(Profile.class); // Create a new object
+        profile.setMoney(DEFAULT_STARTING_MONEY);
+        profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+
+        realm.commitTransaction();
+
     }
 
     public void setupSeekBar(String volume, final String price) {
@@ -255,7 +315,9 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.buy) {
+        if(id == android.R.id.home){
+            finish();
+        }else if (id == R.id.buy) {
             if (!totalPriceOfStock.equals("") && !totalAmountOfStock.equals("")) {
                 if (hasEnoughtMoney(valueOfTotalPriceOfStock)) {
                     new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
@@ -268,13 +330,24 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
                                 public void onClick(SweetAlertDialog sDialog) {
                                     realm.beginTransaction();
 
-                                    UserOwnedStock stock = realm.createObject(UserOwnedStock.class); // Create a new object
-                                    stock.setName(companyNameValue);
-                                    stock.setSymbol(symbolValue);
-                                    stock.setPrice(priceOfStock);
-                                    stock.setAmountOwned(totalAmountOfStock);
+                                    if(userAlreadyOwnsStock(companyNameValue)){
 
-                                    realm.commitTransaction();
+                                        UserOwnedStock stock = realm.where(UserOwnedStock.class).equalTo("name",companyNameValue).findFirst();
+                                        stock.setAmountOwned(String.valueOf(Integer.parseInt(stock.getAmountOwned()) + Integer.parseInt(totalAmountOfStock)));
+                                        realm.commitTransaction();
+
+                                    }else{
+                                        UserOwnedStock stock = realm.createObject(UserOwnedStock.class); // Create a new object
+                                        stock.setName(companyNameValue);
+                                        stock.setSymbol(symbolValue);
+                                        stock.setPrice(priceOfStock);
+                                        stock.setAmountOwned(totalAmountOfStock);
+
+                                        realm.commitTransaction();
+                                    }
+
+                                    makePurchase(valueOfTotalPriceOfStock);
+
 
                                     sDialog
                                             .setTitleText("Success!")
@@ -309,5 +382,25 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Takes a stock name. Checks if the user already owns that stock
+     * @return
+     */
+    private boolean userAlreadyOwnsStock(String stockName) {
+        boolean toReturn;
+
+        RealmResults<UserOwnedStock> stocks = realm.where(UserOwnedStock.class).equalTo("name",stockName).findAll();
+
+        if (stocks.size() > 0) {
+            toReturn = true;
+        } else {
+            toReturn = false;
+        }
+
+        Log.d("D","userAlreadyOwnsStockDebug does user already own stock = " + toReturn);
+
+        return toReturn;
     }
 }
