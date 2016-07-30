@@ -1,333 +1,316 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_detail_search_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:autofit="http://schemas.android.com/apk/res-auto"
-    tools:context=".DetailSearchView">
+<RelativeLayout android:id="@+id/activity_detail_search_view"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:autofit="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".DetailSearchView">
 
-<!--    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />-->
+    <!--    <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />-->
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:visibility="gone"
         android:id="@+id/container"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:weightSum="22"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- company name and current price -->
+
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/companyPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="@color/moneyColor"
+                android:textSize="30sp"
+                autofit:minTextSize="16sp"/>
+
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/companyName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@id/companyPrice"
                 android:layout_marginLeft="16dp"
-                android:orientation="vertical"
-                android:layout_height="match_parent">
+                android:layout_marginTop="16dp"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                autofit:minTextSize="16sp"
+                />
 
-                <!-- company name and current price -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
+            <!-- last traded -->
+            <TextView
+                    android:id="@+id/companyTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:layout_below="@id/companyName"
+                    android:layout_centerHorizontal="true"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp"
+                    />
 
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyName"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/black"
-                        android:layout_weight="6"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:textSize="40sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
+            <!-- day high and day low -->
+            <LinearLayout
+                android:id="@+id/dayPrices"
+                android:layout_below="@id/companyTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="9">
 
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:layout_margin="16dp"
-                        android:id="@+id/companyPrice"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:gravity="center"
-                        android:textColor="@color/moneyColor"
-                        android:maxLines="1"
-                        android:textSize="40sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyOpen"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/moneyColor"
+                    android:textSize="22sp"
+                    autofit:minTextSize="16sp"
+                    />
 
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyLow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/moneyColor"
+                    android:textSize="22sp"
+                    autofit:minTextSize="16sp"
+                    />
 
-                </LinearLayout>
-
-                <!-- last traded -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyTime"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/black"
-                        android:layout_weight="10"
-                        android:gravity="center"
-                        android:layout_margin="16dp"
-                        android:maxLines="2"
-                        android:textSize="24sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-
-                </LinearLayout>
-
-                <!-- day high and day low -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="9"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyOpen"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/moneyColor"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:textSize="20sp"
-                        android:layout_margin="8dp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyLow"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/moneyColor"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:layout_margin="8dp"
-                        android:textSize="20sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyHigh"
-                        android:textColor="@color/negativeColor"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:layout_margin="8dp"
-                        android:textSize="20sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-
-                </LinearLayout>
-
-                <!-- day high and day low -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="9"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyOpenPercent"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/moneyColor"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:textSize="16sp"
-                        android:layout_margin="4dp"
-                        autofit:minTextSize="16sp"
-                        android:text="%"
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyLowPercent"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/negativeColor"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:layout_margin="4dp"
-                        android:textSize="16sp"
-                        autofit:minTextSize="16sp"
-                        android:text="%"
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyHighPercent"
-                        android:textColor="@color/negativeColor"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:layout_margin="4dp"
-                        android:textSize="16sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-
-                </LinearLayout>
-
-                <!-- year to date -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/yearToDateText"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/black"
-                        android:layout_weight="5"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:textSize="40sp"
-                        autofit:minTextSize="16sp"
-                        android:text="Year to Date Percent"
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:layout_margin="16dp"
-                        android:id="@+id/yearToDateValue"
-                        android:layout_height="match_parent"
-                        android:layout_weight="5"
-                        android:gravity="center"
-                        android:textColor="@color/moneyColor"
-                        android:maxLines="1"
-                        android:textSize="40sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-
-                </LinearLayout>
-
-                <!-- market cap-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyMarketCap"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/black"
-                        android:layout_weight="5"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:textSize="20sp"
-                        autofit:minTextSize="16sp"
-                        android:text="Market Cap"
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:layout_margin="16dp"
-                        android:id="@+id/companyMarketCapValue"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/moneyColor"
-                        android:layout_weight="5"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:textSize="40sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-
-                </LinearLayout>
-
-                <!-- volume -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="2"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:id="@+id/companyVolume"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/black"
-                        android:layout_weight="5"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:textSize="20sp"
-                        autofit:minTextSize="16sp"
-                        android:text="Volume"
-                        />
-
-                    <me.grantland.widget.AutofitTextView
-                        android:layout_width="0dp"
-                        android:layout_margin="16dp"
-                        android:id="@+id/companyVolumeValue"
-                        android:layout_height="match_parent"
-                        android:layout_weight="5"
-                        android:gravity="center"
-                        android:textColor="@android:color/black"
-                        android:maxLines="1"
-                        android:textSize="40sp"
-                        autofit:minTextSize="16sp"
-                        android:text=""
-                        />
-
-
-                </LinearLayout>
-
-                <!-- chart -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="8"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_height="400dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="chart"/>
-
-
-                </LinearLayout>
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyHigh"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/negativeColor"
+                    android:textSize="22sp"
+                    autofit:minTextSize="16sp"
+                    />
 
             </LinearLayout>
+
+            <!-- day high and day low -->
+            <LinearLayout
+                android:id="@+id/percentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dayPrices"
+                android:orientation="horizontal"
+                android:weightSum="9">
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyOpenPercent"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="%"
+                    android:textColor="@color/moneyColor"
+                    android:textSize="20sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyLowPercent"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="%"
+                    android:textColor="@color/negativeColor"
+                    android:textSize="20sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyHighPercent"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/negativeColor"
+                    android:textSize="20sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+
+            </LinearLayout>
+
+            <!-- year to date -->
+            <LinearLayout
+                android:layout_below="@id/percentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:weightSum="10">
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/yearToDateText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Year to Date Percent"
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/yearToDateValue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="@color/moneyColor"
+                    android:textSize="30sp"
+                    autofit:minTextSize="16sp"
+                    />`
+
+            </LinearLayout>
+
+            <!-- market cap-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyMarketCap"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Market Cap"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyMarketCapValue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="@color/moneyColor"
+                    android:textSize="40sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+
+            </LinearLayout>
+
+            <!-- volume -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyVolume"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Volume"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/companyVolumeValue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="40sp"
+                    autofit:minTextSize="16sp"
+                    />
+
+
+            </LinearLayout>
+
+            <!-- chart -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_weight="8"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="chart"/>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </ScrollView>
 
@@ -341,10 +324,10 @@
         autofit:LoadingDots_dots_count="6"
         autofit:LoadingDots_dots_size="15dp"
         autofit:LoadingDots_dots_space="1dp"
-        autofit:LoadingDots_loop_duration="800"
-        autofit:LoadingDots_loop_start_delay="100"
         autofit:LoadingDots_jump_duration="200"
-        autofit:LoadingDots_jump_height="4dp"/>
+        autofit:LoadingDots_jump_height="4dp"
+        autofit:LoadingDots_loop_duration="800"
+        autofit:LoadingDots_loop_start_delay="100"/>
 
 
 </RelativeLayout>

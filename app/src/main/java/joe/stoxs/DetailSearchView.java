@@ -115,6 +115,8 @@ public class DetailSearchView extends AppCompatActivity {
         setContentView(R.layout.activity_detail_search_view);
         ButterKnife.bind(this);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         progress.startAnimation();
 
         String symbol = getIntent().getExtras().getString("symbol");
@@ -124,6 +126,8 @@ public class DetailSearchView extends AppCompatActivity {
             initVars();
             getDetails(symbol);
         }
+
+        getSupportActionBar().setTitle("Details on " + symbol);
 
     }
 
@@ -153,12 +157,10 @@ public class DetailSearchView extends AppCompatActivity {
                         String APIStatus = json.getString("Status");
                         if(APIStatus.equals("SUCCESS")){
                             String name = json.getString("Name");
-                            String symbol = json.getString("Symbol");
                             String lastPrice = json.getString("LastPrice");
                             String volume = json.getString("Volume");
 
                             nameToPass = name;
-                            symbolToPass = symbol;
                             priceToPass = lastPrice;
                             volumeToPass = volume;
 
@@ -173,7 +175,6 @@ public class DetailSearchView extends AppCompatActivity {
                             String low = json.getString("Low");
                             String open = json.getString("Open");
                             company.setName(name);
-                            company.setSymbol(symbol);
                             company.setLastPrice(lastPrice);
                             company.setChange(change);
                             company.setChangePercent(changePercent);
@@ -219,16 +220,16 @@ public class DetailSearchView extends AppCompatActivity {
 
         companyToAddToFavorites = c;
 
-        companyName.setText(c.getName() + "(" + c.getSymbol() +")");
+        companyName.setText(c.getName());
 
         String price = formatter.format(Double.parseDouble(c.getLastPrice()));
 
         companyPrice.setText(price);
 
-        companyTime.setText(c.getTimestamp());
-        companyOpen.setText("Open $"+c.getOpen());
-        companyHigh.setText("High $"+c.getHigh());
-        companyLow.setText("Low $"+c.getLow());
+        companyTime.setText("As of " + c.getTimestamp());
+        companyOpen.setText("Open \n$"+c.getOpen());
+        companyHigh.setText("High \n$"+c.getHigh());
+        companyLow.setText("Low \n$"+c.getLow());
 
         if(Double.parseDouble(c.getLow()) >= Double.parseDouble(c.getLastPrice())){
             companyLow.setTextColor(getResources().getColor(R.color.moneyColor));
@@ -367,7 +368,6 @@ public class DetailSearchView extends AppCompatActivity {
      */
     public void deepCopy(CompanyDetail companyOne, CompanyDetail companyTwo){
         companyOne.setName(companyTwo.getName());
-        companyOne.setSymbol(companyTwo.getSymbol());
         companyOne.setLastPrice(companyTwo.getLastPrice());
         companyOne.setChange(companyTwo.getChange());
         companyOne.setChangePercent(companyTwo.getChangePercent());

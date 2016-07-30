@@ -68,7 +68,6 @@
 
                 </LinearLayout>
 
-
                 <!-- bought at price -->
                 <LinearLayout
                     android:layout_width="match_parent"
