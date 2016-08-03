@@ -8,4 +8,8 @@
         android:title="Favorite"
         android:icon="@drawable/ic_star_white_24dp"
         myapp:showAsAction="collapseActionView|ifRoom" />
+    <item android:id="@+id/chart"
+        android:title="Chart"
+        android:icon="@drawable/ic_chart_white_24dp"
+        myapp:showAsAction="collapseActionView|ifRoom" />
 </menu>

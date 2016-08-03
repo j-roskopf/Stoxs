@@ -39,6 +39,8 @@
         <activity android:name=".DetailSearchView" />
         <activity android:name=".BuyStockActivity" />
         <activity android:name=".OwnedStockDetailView"></activity>
+        <activity android:name=".Chart.ChartActivity" />
+        <activity android:name=".Chart.ChartMainActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
