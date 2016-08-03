@@ -29,11 +29,7 @@ import io.realm.Realm;
 import joe.stoxs.Chart.ChartActivity;
 import joe.stoxs.Chart.ChartMainActivity;
 import joe.stoxs.Constant.Constants;
-import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.Markit.CompanyDetail;
-import joe.stoxs.Object.Profile;
-
-import static joe.stoxs.R.id.favorite;
 
 public class DetailSearchView extends AppCompatActivity {
 
