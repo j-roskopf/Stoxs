@@ -8,7 +8,7 @@
                 android:layout_height="match_parent"
                 tools:context=".DetailSearchView">
 
-    <!--    <com.github.mikephil.charting.charts.LineChart
+    <!--<com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />-->
@@ -179,10 +179,12 @@
 
             <!-- year to date -->
             <LinearLayout
+                android:id="@+id/percentYear"
                 android:layout_below="@id/percentText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginLeft="16dp"
                 android:weightSum="10">
@@ -196,7 +198,7 @@
                     android:maxLines="1"
                     android:text="Year to Date Percent"
                     android:textColor="@android:color/black"
-                    android:textSize="30sp"
+                    android:textSize="24sp"
                     autofit:minTextSize="16sp"
                     />
 
@@ -204,32 +206,34 @@
                     android:id="@+id/yearToDateValue"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="16dp"
                     android:layout_weight="4"
-                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:gravity="right"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/moneyColor"
-                    android:textSize="30sp"
+                    android:textSize="22sp"
                     autofit:minTextSize="16sp"
-                    />`
+                    />
 
             </LinearLayout>
 
             <!-- market cap-->
             <LinearLayout
+                android:id="@+id/marketCap"
+                android:layout_below="@id/percentYear"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <me.grantland.widget.AutofitTextView
                     android:id="@+id/companyMarketCap"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_weight="5"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:maxLines="2"
                     android:text="Market Cap"
                     android:textColor="@android:color/black"
@@ -241,7 +245,7 @@
                     android:id="@+id/companyMarketCapValue"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_weight="5"
                     android:gravity="center"
                     android:maxLines="1"
@@ -256,9 +260,10 @@
 
             <!-- volume -->
             <LinearLayout
+                android:id="@+id/companyVolumeText"
+                android:layout_below="@id/marketCap"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="10">
 
@@ -267,7 +272,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
-                    android:gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="left"
                     android:maxLines="2"
                     android:text="Volume"
                     android:textColor="@android:color/black"
@@ -279,13 +285,13 @@
                     android:id="@+id/companyVolumeValue"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_weight="5"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@android:color/black"
-                    android:textSize="40sp"
+                    android:textSize="24sp"
                     autofit:minTextSize="16sp"
                     />
 
@@ -294,9 +300,9 @@
 
             <!-- chart -->
             <LinearLayout
+                android:layout_below="@id/companyVolumeText"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_weight="8"
                 android:orientation="horizontal"
                 android:weightSum="10">
 
@@ -306,7 +312,6 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="chart"/>
-
 
             </LinearLayout>
 

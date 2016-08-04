@@ -338,6 +338,11 @@ public class DetailSearchView extends AppCompatActivity {
             return true;
         }
 
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
