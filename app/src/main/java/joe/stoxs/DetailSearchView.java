@@ -1,5 +1,6 @@
 package joe.stoxs;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,13 +26,10 @@ import java.text.NumberFormat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
+import joe.stoxs.Chart.ChartActivity;
+import joe.stoxs.Chart.ChartMainActivity;
 import joe.stoxs.Constant.Constants;
-import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.Object.Markit.CompanyDetail;
-import joe.stoxs.Object.Profile;
-
-import static joe.stoxs.R.id.favorite;
 
 public class DetailSearchView extends AppCompatActivity {
 
@@ -39,6 +37,8 @@ public class DetailSearchView extends AppCompatActivity {
      * non ui
      */
     AQuery aq;
+
+    Context context;
 
     String nameToPass;
     String symbolToPass;
@@ -135,6 +135,7 @@ public class DetailSearchView extends AppCompatActivity {
         aq = new AQuery(this);
         formatter = NumberFormat.getCurrencyInstance();
         realm = Realm.getDefaultInstance();
+        context = this;
     }
 
     public void getDetails(String symbol){
@@ -157,10 +158,12 @@ public class DetailSearchView extends AppCompatActivity {
                         String APIStatus = json.getString("Status");
                         if(APIStatus.equals("SUCCESS")){
                             String name = json.getString("Name");
+                            String symbol = json.getString("Symbol");
                             String lastPrice = json.getString("LastPrice");
                             String volume = json.getString("Volume");
 
                             nameToPass = name;
+                            symbolToPass = symbol;
                             priceToPass = lastPrice;
                             volumeToPass = volume;
 
@@ -175,6 +178,7 @@ public class DetailSearchView extends AppCompatActivity {
                             String low = json.getString("Low");
                             String open = json.getString("Open");
                             company.setName(name);
+                            company.setSymbol(symbol);
                             company.setLastPrice(lastPrice);
                             company.setChange(change);
                             company.setChangePercent(changePercent);
@@ -220,7 +224,7 @@ public class DetailSearchView extends AppCompatActivity {
 
         companyToAddToFavorites = c;
 
-        companyName.setText(c.getName());
+        companyName.setText(c.getName() + "(" + c.getSymbol() +")");
 
         String price = formatter.format(Double.parseDouble(c.getLastPrice()));
 
@@ -333,13 +337,22 @@ public class DetailSearchView extends AppCompatActivity {
             return true;
         }
 
-        if (id == favorite) {
+        else if (id == R.id.favorite) {
             favoriteStock();
             return true;
         }
 
-        if (id == android.R.id.home) {
+        else if (id == android.R.id.home) {
             this.finish();
+            return true;
+        }
+
+        else if (id == R.id.chart) {
+            Intent i = new Intent(context,ChartActivity.class);
+            Log.d("D","chartDebug putting symbol = " + symbolToPass);
+            i.putExtra("symbol",symbolToPass);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
             return true;
         }
 
@@ -373,6 +386,7 @@ public class DetailSearchView extends AppCompatActivity {
      */
     public void deepCopy(CompanyDetail companyOne, CompanyDetail companyTwo){
         companyOne.setName(companyTwo.getName());
+        companyOne.setSymbol(companyTwo.getSymbol());
         companyOne.setLastPrice(companyTwo.getLastPrice());
         companyOne.setChange(companyTwo.getChange());
         companyOne.setChangePercent(companyTwo.getChangePercent());
