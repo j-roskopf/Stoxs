@@ -13,6 +13,8 @@ public class Profile extends RealmObject {
 
     private long lastUpdated;
 
+    private double lifetimeEarned;
+
     public double getMoney() {
         return money;
     }
@@ -27,5 +29,13 @@ public class Profile extends RealmObject {
 
     public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public double getLifetimeEarned() {
+        return lifetimeEarned;
+    }
+
+    public void setLifetimeEarned(double lifetimeEarned) {
+        this.lifetimeEarned = lifetimeEarned;
     }
 }

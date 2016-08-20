@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
+import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Calendar;
 
@@ -32,11 +36,14 @@ import static joe.stoxs.Constant.Constants.DEFAULT_STARTING_MONEY;
  * Created by Joe on 6/15/2016.
  */
 
-public class Summary extends Fragment {
+public class Summary extends Fragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2 {
 
     /**
      * non ui
      */
+
+    final int REFERENCE_MORE_MONEY = 1;
+
     private static String ARG_SECTION_NUMBER = "arg_section_number";
 
     private NumberFormat formatter;
@@ -49,10 +56,10 @@ public class Summary extends Fragment {
      */
 
     TextView money;
+    TextView lifetimeMoney;
 
     com.github.clans.fab.FloatingActionButton refreshFabItem;
-
-
+    com.github.clans.fab.FloatingActionButton moreMoneyItem;
 
     public static Summary newInstance(int sectionNumber) {
         Summary fragment = new Summary();
@@ -88,6 +95,14 @@ public class Summary extends Fragment {
         if(profiles.size() > 0){
             Profile profile = realm.where(Profile.class).findFirst();
             money.setText(formatter.format(profile.getMoney()));
+            lifetimeMoney.setText(formatter.format(profile.getLifetimeEarned()));
+            if(profile.getLifetimeEarned() < 0){
+                //boo
+                lifetimeMoney.setTextColor(getResources().getColor(R.color.negativeColor));
+            }else{
+                //nice
+                lifetimeMoney.setTextColor(getResources().getColor(R.color.moneyColor));
+            }
         }else{
             createProfile();
         }
@@ -104,6 +119,9 @@ public class Summary extends Fragment {
         profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
 
         money.setText(formatter.format(DEFAULT_STARTING_MONEY));
+        lifetimeMoney.setText(formatter.format(0.0));
+
+
 
         realm.commitTransaction();
 
@@ -112,10 +130,25 @@ public class Summary extends Fragment {
     public void initVars(View view){
         formatter = NumberFormat.getCurrencyInstance();
         realm = Realm.getDefaultInstance();
+
         refreshFabItem = (com.github.clans.fab.FloatingActionButton)view.findViewById(R.id.refresh_fab);
+        moreMoneyItem = (com.github.clans.fab.FloatingActionButton)view.findViewById(R.id.moreMoney);
+
         money = (TextView)view.findViewById(R.id.money);
+        lifetimeMoney = (TextView)view.findViewById(R.id.lifetimeMoney);
 
         setupRefreshButton();
+
+        setupMoreMoneyButton();
+    }
+
+    private void setupMoreMoneyButton() {
+        moreMoneyItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayPicker();
+            }
+        });
     }
 
     /**
@@ -130,8 +163,47 @@ public class Summary extends Fragment {
         });
     }
 
+    /**
+     * prompts the user with a dialog to give them more money
+     */
+    public void displayPicker(){
+        NumberPickerBuilder npb = new NumberPickerBuilder()
+                .setReference(REFERENCE_MORE_MONEY)
+                .setFragmentManager(getActivity().getSupportFragmentManager())
+                .setTargetFragment(Summary.this)
+                .setMaxNumber(BigDecimal.valueOf(Constants.DEFAULT_STARTING_MONEY))
+                .setPlusMinusVisibility(View.INVISIBLE)
+                .setDecimalVisibility(View.INVISIBLE)
+                .setStyleResId(R.style.BetterPickersDialogFragment_Light)
+                .setLabelText("Dollars");
+        npb.show();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onDialogNumberSet(int reference, BigInteger number, double decimal, boolean isNegative, BigDecimal fullNumber) {
+
+        final int amount = number.intValue();
+
+        Log.d("D","moreMoneyDebug");
+
+        if(reference == REFERENCE_MORE_MONEY){
+
+            Profile profile = realm.where(Profile.class).findFirst();
+            realm.beginTransaction();
+
+            Log.d("D","moreMoneyDebug current amount of money = " + profile.getMoney());
+            profile.setMoney(profile.getMoney() + amount);
+            Log.d("D","moreMoneyDebug total money = " + (profile.getMoney() + amount));
+
+            realm.commitTransaction();
+
+            getMoney();
+        }
+
     }
 }

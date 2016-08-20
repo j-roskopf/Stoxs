@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import joe.stoxs.Constant.SharedVariables;
 import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.R;
 import joe.stoxs.adapter.OwnedStocksAdapter;
@@ -86,11 +88,31 @@ public class BaseStockSearch extends Fragment {
         displayStocks();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        realm.close();
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d("D","onResume isDirty = " + SharedVariables.myStocksIsDirty);
+
+        if(SharedVariables.myStocksIsDirty){
+            SharedVariables.myStocksIsDirty = false;
+
+            refresh();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean visible){
+        super.setUserVisibleHint(visible);
     }
 
     @Override

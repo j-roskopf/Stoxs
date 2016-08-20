@@ -94,9 +94,11 @@ public class ChartFragment extends Fragment {
         }else{
             Log.d("D","chartFragmentDebug no its not null " + chartToDisplay.dataSets.size() + " " + chartToDisplay.xVals.size());
 
+            //display chart info
             LineChart chart = (LineChart) view.findViewById(R.id.chart);
             LineData data = new LineData(chartToDisplay.xVals, chartToDisplay.dataSets);
             chart.setData(data);
+            chart.setDescription("");
             chart.invalidate(); // refresh
         }
 

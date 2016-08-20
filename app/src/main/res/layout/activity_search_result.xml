@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_search_result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     tools:context=".SearchResultActivity">
 
     <ListView
         android:layout_width="match_parent"
+        android:visibility="invisible"
         android:dividerHeight="0dp"
         android:layout_height="match_parent"
         android:id="@+id/searchResultsListView"
         />
 
-</android.support.constraint.ConstraintLayout>
+    <com.eyalbira.loadingdots.LoadingDots
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        autofit:LoadingDots_auto_play="true"
+        autofit:LoadingDots_dots_color="@android:color/holo_blue_light"
+        autofit:LoadingDots_dots_count="6"
+        autofit:LoadingDots_dots_size="15dp"
+        autofit:LoadingDots_dots_space="1dp"
+        autofit:LoadingDots_jump_duration="200"
+        autofit:LoadingDots_jump_height="4dp"
+        autofit:LoadingDots_loop_duration="800"
+        autofit:LoadingDots_loop_start_delay="100"/>
+
+
+</RelativeLayout>

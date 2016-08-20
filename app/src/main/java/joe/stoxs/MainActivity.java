@@ -2,6 +2,8 @@ package joe.stoxs;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,15 +20,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
@@ -92,15 +97,23 @@ public class MainActivity extends AppCompatActivity {
         new DrawerBuilder().withActivity(this).build();
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Item 1");
+        PrimaryDrawerItem feedback = new PrimaryDrawerItem().withName("Feedback").withIdentifier(1);
+        feedback.withIcon(R.drawable.ic_help_black_24dp);
+
+        ExpandableDrawerItem expandableDrawerItem = new ExpandableDrawerItem().withName("Finance News").withIcon(R.drawable.ic_monetization_on_black_24dp).withSelectable(false).withSubItems(
+                new SecondaryDrawerItem().withName("CNN").withLevel(2).withIcon(R.drawable.cnn).withIdentifier(2),
+                new SecondaryDrawerItem().withName("Yahoo").withLevel(2).withIcon(R.drawable.yahoo).withIdentifier(3)
+        );
+
+        SectionDrawerItem sectionDrawerItem = new SectionDrawerItem().withDivider(true).withName("Stock Prices");
 
         // Create the AccountHeader
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
-                .addProfiles(
+                /*.addProfiles(
                         new ProfileDrawerItem().withName("Joe ").withEmail("test@gmail.com")
-                )
+                )*/
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
@@ -116,19 +129,57 @@ public class MainActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult)
                 .withToolbar(toolbar)
                 .addDrawerItems(
-                        item1,
+                        feedback,
+                        expandableDrawerItem,
+                        sectionDrawerItem,
+                        new SecondaryDrawerItem().withName("CNN").withIcon(R.drawable.cnn).withIdentifier(4).withSelectable(false),
+                        new SecondaryDrawerItem().withName("Google").withIcon(R.drawable.google).withIdentifier(5).withSelectable(false),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName("item 2"),
-                        new SecondaryDrawerItem().withName("item 3")
+                        new SecondaryDrawerItem().withName("Reuters").withIdentifier(6),
+                        new SecondaryDrawerItem().withName("NASDAQ").withIdentifier(7)
                 )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
-                        return true;
-                    }
-                })
                 .build();
+
+        result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                long id = drawerItem.getIdentifier();
+
+                String url = "";
+
+                if(id == 1){
+                    //feedback
+                    Intent i = new Intent(getApplicationContext(),FeedbackActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }else if(id == 2){
+                    //cnn news
+                    url = "http://money.cnn.com";
+                }else if(id == 3){
+                    //yahoo news
+                    url = "http://finance.yahoo.com";
+                }else if(id == 4){
+                    //cnn stock prices
+                    url = "http://money.cnn.com/data/markets";
+                }else if(id == 5){
+                    //google stock prices
+                    url = "https://www.google.com/finance";
+                }else if(id == 6){
+                    //reuters link
+                    url = "http://www.reuters.com/";
+                }else if(id == 7){
+                    //nasdax link
+                    url = "http://www.nasdaq.com/";
+                }
+
+                if(id >= 2 && !url.equals("")){
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                }
+
+                return false;
+            }
+        });
     }
 
 
@@ -175,17 +226,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void refresh(){
-        if(mViewPager.getCurrentItem() == 0){
-            BaseStockSearch fragment = (BaseStockSearch) mSectionsPagerAdapter.getItem(0);
-            fragment.refresh();
-        }else{
-            Snackbar.make(findViewById(R.id.main_content), "Implement refresh for this fragment", Snackbar.LENGTH_LONG)
-                    .show();
-        }
-
     }
 
 

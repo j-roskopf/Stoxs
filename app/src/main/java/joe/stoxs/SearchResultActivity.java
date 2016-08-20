@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import joe.stoxs.Constant.Constants;
 import joe.stoxs.Object.Markit.Company;
@@ -36,6 +37,8 @@ public class SearchResultActivity extends AppCompatActivity {
      */
 
     ListView listView;
+
+    com.eyalbira.loadingdots.LoadingDots progress;
 
     /**
      * non UI
@@ -58,7 +61,9 @@ public class SearchResultActivity extends AppCompatActivity {
 
     public void initVars(){
         listView = (ListView)findViewById(R.id.searchResultsListView);
+        progress = (com.eyalbira.loadingdots.LoadingDots)findViewById(R.id.progress);
         aq = new AQuery(this);
+
     }
 
     @Override
@@ -73,8 +78,6 @@ public class SearchResultActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             search(query);
-
-            Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,6 +147,10 @@ public class SearchResultActivity extends AppCompatActivity {
                 getApplicationContext().startActivity(intent);
             }
         });
+
+        //hide dots
+        progress.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.VISIBLE);
     }
 
     @Override

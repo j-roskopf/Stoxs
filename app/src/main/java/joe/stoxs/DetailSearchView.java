@@ -22,14 +22,18 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import joe.stoxs.Chart.ChartActivity;
 import joe.stoxs.Chart.ChartMainActivity;
 import joe.stoxs.Constant.Constants;
 import joe.stoxs.Object.Markit.CompanyDetail;
+import joe.stoxs.Object.UserOwnedStock;
 
 public class DetailSearchView extends AppCompatActivity {
 
@@ -222,6 +226,7 @@ public class DetailSearchView extends AppCompatActivity {
 
     public void displayData(CompanyDetail c){
 
+
         companyToAddToFavorites = c;
 
         companyName.setText(c.getName() + "(" + c.getSymbol() +")");
@@ -230,7 +235,19 @@ public class DetailSearchView extends AppCompatActivity {
 
         companyPrice.setText(price);
 
-        companyTime.setText("As of " + c.getTimestamp());
+        String format = "EEE MMM dd HH:mm:ss 'UTC-04:00' yyyy";
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        try{
+            Date date = formatter.parse(c.getTimestamp());
+            SimpleDateFormat displayFormat = new SimpleDateFormat("EEE MMM dd yyyy hh:mm:ss a");
+            companyTime.setText("As of " + displayFormat.format(date));
+
+        }catch (Exception e){
+            companyTime.setText("As of " + (c.getTimestamp()));
+
+        }
+
+
         companyOpen.setText("Open \n$"+c.getOpen());
         companyHigh.setText("High \n$"+c.getHigh());
         companyLow.setText("Low \n$"+c.getLow());
@@ -367,14 +384,29 @@ public class DetailSearchView extends AppCompatActivity {
             Snackbar.make(findViewById(R.id.activity_detail_search_view), "Something went wrong with favoriting", Snackbar.LENGTH_SHORT)
                     .show();
         }else{
-            realm.beginTransaction();
-            CompanyDetail c = realm.createObject(CompanyDetail.class);
-            deepCopy(c,companyToAddToFavorites);
-            c = companyToAddToFavorites;
-            realm.commitTransaction();
+            RealmResults<CompanyDetail> results = realm.where(CompanyDetail.class).equalTo("symbol",companyToAddToFavorites.getSymbol()).findAll();
+            if(results.size() > 0){
+                CompanyDetail c = realm.where(CompanyDetail.class)
+                        .equalTo("symbol", companyToAddToFavorites.getSymbol()).findFirst();
+                realm.beginTransaction();
 
-            Snackbar.make(findViewById(R.id.activity_detail_search_view), "Favorited!", Snackbar.LENGTH_SHORT)
-                    .show();
+                c.deleteFromRealm();
+
+                realm.commitTransaction();
+                Snackbar.make(findViewById(R.id.activity_detail_search_view), "Deleted from Favorites", Snackbar.LENGTH_SHORT)
+                        .show();
+            }else{
+                realm.beginTransaction();
+                CompanyDetail c = realm.createObject(CompanyDetail.class);
+                deepCopy(c,companyToAddToFavorites);
+                c = companyToAddToFavorites;
+                realm.commitTransaction();
+                Snackbar.make(findViewById(R.id.activity_detail_search_view), "Favorited!", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+
+
 
         }
     }

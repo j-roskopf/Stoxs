@@ -4,14 +4,70 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:textSize="48sp"
-        android:id="@+id/money"
-        android:textColor="@color/moneyColor"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="25000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/totalAmountContainer"
+        android:weightSum="10"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:layout_weight="2"
+            android:text="Total cash"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="8"
+            android:textSize="48sp"
+            android:gravity="center"
+            android:id="@+id/money"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:textColor="@color/moneyColor"
+            android:layout_height="0dp"
+            android:text="25000"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/totalAmountContainer"
+        android:weightSum="10"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:layout_weight="2"
+            android:text="Lifetime earned"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="8"
+            android:textSize="48sp"
+            android:gravity="center"
+            android:id="@+id/lifetimeMoney"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:textColor="@color/moneyColor"
+            android:layout_height="0dp"
+            android:text="25000"/>
+
+
+    </LinearLayout>
+
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu_red"
@@ -27,20 +83,12 @@
         fab:menu_backgroundColor="#ccffffff">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab1"
+            android:id="@+id/moreMoney"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_attach_money_white"
             fab:fab_size="mini"
-            fab:fab_label="Placeholder button 1" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_label="Placeholder button 2" />
+            fab:fab_label="More Money" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/refresh_fab"

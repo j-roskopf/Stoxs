@@ -25,7 +25,9 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +41,7 @@ import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 
 import static android.R.attr.format;
+import static joe.stoxs.Constant.Constants.DEFAULT_STARTING_MONEY;
 import static joe.stoxs.R.id.boughtAtPriceValue;
 import static joe.stoxs.R.id.companyHigh;
 import static joe.stoxs.R.id.container;
@@ -79,6 +82,8 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
     int amountWillSell = 0;
 
     String companyName;
+
+    double amountGained = 0.0;
 
     /**
      * ui
@@ -196,6 +201,11 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                                         message = "You have sold all your stocks for " + companyName;
                                     }else{
                                         message = "You have sold " + amountWillSell + " of your stocks for " + companyName;
+                                    }
+
+                                    if(amountGained != 0.0){
+                                        Log.d("D","sellDebug adding " + amountGained + " to lifetime total");
+                                        addToLifeTimeTotal(amountGained);
                                     }
 
                                     sDialog
@@ -414,7 +424,12 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
                 double amountSpentWhenPurchasing = value * priceBoughtAt;
 
+                //calculate if we're gaining or losing money
                 double total = amountToSell - amountSpentWhenPurchasing;
+
+                //store the amount the user is gaining / losing so we can add it to their lifetime total
+                //make sure to round to 2 places
+                amountGained = ((double) Math.round(total * 100) / 100);
 
                 String totalFormatted = formatter.format((total));
 
@@ -429,7 +444,6 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
                 }
 
                 totalPriceValue.setText(totalFormatted);
-
 
                 String price = formatter.format((value * priceToUse));
                 amountEarnedValue.setText(price);
@@ -446,6 +460,42 @@ public class OwnedStockDetailView extends AppCompatActivity implements NumberPic
 
             }
         });
+    }
+
+    /**
+     * Added the total to the lifetime amount the user has gained / loss
+     * @param total
+     */
+    private void addToLifeTimeTotal(double total) {
+        RealmResults<Profile> profiles = realm.where(Profile.class).findAll();
+        if (profiles.size() > 0) {
+            Profile profile = realm.where(Profile.class).findFirst();
+            realm.beginTransaction();
+            profile.setLifetimeEarned(profile.getLifetimeEarned() + total );
+            realm.commitTransaction();
+        }else{
+            //first time loading I guess, create a profile with the default amount of money
+            createProfile();
+
+            Profile profile = realm.where(Profile.class).findFirst();
+            realm.beginTransaction();
+            profile.setLifetimeEarned(profile.getLifetimeEarned() + total );
+            realm.commitTransaction();
+        }
+    }
+
+    /**
+     * creates a profile with the default amount of money if no profile is detected
+     */
+    public void createProfile(){
+        realm.beginTransaction();
+
+        Profile profile = realm.createObject(Profile.class); // Create a new object
+        profile.setMoney(DEFAULT_STARTING_MONEY);
+        profile.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+
+        realm.commitTransaction();
+
     }
 
     @Override

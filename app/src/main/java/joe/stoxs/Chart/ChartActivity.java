@@ -3,9 +3,11 @@ package joe.stoxs.Chart;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -33,7 +35,7 @@ import joe.stoxs.Object.ChartObject;
 import joe.stoxs.Object.Markit.Company;
 import joe.stoxs.R;
 
-public class ChartActivity extends Activity {
+public class ChartActivity extends AppCompatActivity {
 
     /**
      * non ui
@@ -101,6 +103,10 @@ public class ChartActivity extends Activity {
     }
 
 
+    /**
+     * Makes network call to get info on symbol
+     * @param symbol
+     */
     public void getInfo(String symbol){
         String urlToUse = Constants.BASE_CHART_URL;
 
@@ -155,6 +161,18 @@ public class ChartActivity extends Activity {
         startActivity(i);
         finish();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

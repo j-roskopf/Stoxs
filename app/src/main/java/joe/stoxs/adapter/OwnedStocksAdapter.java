@@ -66,7 +66,11 @@ public class OwnedStocksAdapter extends RecyclerView.Adapter<OwnedStocksAdapter.
 
     @Override
     public int getItemCount() {
-        return stocks.size();
+        if(stocks.isValid()){
+            return stocks.size();
+        }else{
+            return 0;
+        }
     }
 
     @Override

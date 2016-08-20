@@ -72,11 +72,11 @@ public class ChartMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart_main);
 
+        initVars();
+
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-        initVars();
 
         jsonResults = (getIntent().getExtras().getString("jsonResults"));
 
@@ -110,6 +110,14 @@ public class ChartMainActivity extends AppCompatActivity {
         if(results!= null){
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
             // Create the adapter that will return a fragment for each of the three
             // primary sections of the activity.
             mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -228,6 +236,8 @@ public class ChartMainActivity extends AppCompatActivity {
         Collections.reverse(valsComp1);
 
         LineDataSet setComp1 = new LineDataSet(valsComp1, symbol);
+        setComp1.setLineWidth(12);
+        setComp1.setValueTextSize(40);
         setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         // use the interface ILineDataSet
@@ -295,6 +305,8 @@ public class ChartMainActivity extends AppCompatActivity {
         Collections.reverse(valsComp1);
 
         LineDataSet setComp1 = new LineDataSet(valsComp1, symbol);
+        setComp1.setLineWidth(12);
+        setComp1.setValueTextSize(40);
         setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         // use the interface ILineDataSet
@@ -363,6 +375,8 @@ public class ChartMainActivity extends AppCompatActivity {
         Collections.reverse(valsComp1);
 
         LineDataSet setComp1 = new LineDataSet(valsComp1, symbol);
+        setComp1.setLineWidth(12);
+        setComp1.setValueTextSize(40);
         setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         // use the interface ILineDataSet
@@ -431,6 +445,8 @@ public class ChartMainActivity extends AppCompatActivity {
         Collections.reverse(valsComp1);
 
         LineDataSet setComp1 = new LineDataSet(valsComp1, symbol);
+        setComp1.setLineWidth(12);
+        setComp1.setValueTextSize(40);
         setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         // use the interface ILineDataSet

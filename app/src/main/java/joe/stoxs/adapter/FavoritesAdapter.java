@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 
+import java.text.DecimalFormat;
+
 import io.realm.RealmResults;
+import joe.stoxs.DetailSearchView;
 import joe.stoxs.Object.Markit.CompanyDetail;
 import joe.stoxs.Object.UserOwnedStock;
 import joe.stoxs.OwnedStockDetailView;
@@ -29,11 +32,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Stoc
 
     private RealmResults<CompanyDetail> stocks;
     private Context context;
+    DecimalFormat formater;
 
 
     public FavoritesAdapter(RealmResults<CompanyDetail> stocks, Context context){
         this.context = context;
         this.stocks = stocks;
+        formater = new DecimalFormat("#.##");
+
     }
 
     public class StockViewHolder extends RecyclerView.ViewHolder {
@@ -47,12 +53,26 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Stoc
             stockName = (TextView)itemView.findViewById(R.id.stockName);
             stockAmount = (TextView)itemView.findViewById(R.id.stockAmount);
             stockImage = (ImageView)itemView.findViewById(R.id.stockImage);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DetailSearchView.class);
+                    intent.putExtra("symbol",stocks.get(position).getSymbol());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
     @Override
     public int getItemCount() {
-        return stocks.size();
+        if(stocks.isValid()){
+            return stocks.size();
+        }else{
+            return 0;
+        }
+
     }
 
     @Override
@@ -66,13 +86,18 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Stoc
     @Override
     public void onBindViewHolder(StockViewHolder stockViewHolder, int i) {
         stockViewHolder.stockName.setText(stocks.get(i).getName());
-        stockViewHolder.stockAmount.setText("Change %:  " + stocks.get(i).getChangePercentYTD());
+        stockViewHolder.stockAmount.setText( "YTD Change %" + formater.format(Double.parseDouble(stocks.get(i).getChangePercentYTD())));
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(stocks.get(i).getName().substring(0,1), getMatColor("500"));
         stockViewHolder.position = i;
         stockViewHolder.stockImage.setImageDrawable(drawable);
     }
 
+    /**
+     * gets random color from colors.xml that conforms to material colors
+     * @param typeColor
+     * @return
+     */
     private int getMatColor(String typeColor)
     {
         int returnColor = Color.BLACK;

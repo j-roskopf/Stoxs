@@ -28,6 +28,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import joe.stoxs.Constant.Constants;
+import joe.stoxs.Constant.SharedVariables;
 import joe.stoxs.Object.Profile;
 import joe.stoxs.Object.UserOwnedStock;
 
@@ -348,6 +349,7 @@ public class BuyStockActivity extends AppCompatActivity implements NumberPickerD
 
                                     makePurchase(valueOfTotalPriceOfStock);
 
+                                    SharedVariables.myStocksIsDirty = true;
 
                                     sDialog
                                             .setTitleText("Success!")
